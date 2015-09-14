@@ -1,0 +1,2 @@
+@interface AppsterRootViewController : UIViewController
+@end

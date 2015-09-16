@@ -21,9 +21,11 @@
 
 	AppListViewController *appList = [[AppListViewController alloc] init];
 	UINavigationController *appListNav = [[UINavigationController alloc] initWithRootViewController:appList];
+	appListNav.tabBarItem.image = [UIImage imageNamed:@"iTunes.png"];
 
 	TweakListViewController *tweakList = [[TweakListViewController alloc] init];
 	UINavigationController *tweakListNav = [[UINavigationController alloc] initWithRootViewController:tweakList];
+	tweakListNav.tabBarItem.image = [UIImage imageNamed:@"Cydia.png"];
 
 
 	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, nil];

@@ -85,7 +85,8 @@
 }
 
 - (void) viewDidLoad {
-	self.tabBarItem.title = @"Applications";
+	self.tabBarItem.title = @"appz";
+	self.tabBarItem.image = [UIImage imageNamed:@"iTunes.png"];
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor whiteColor];
 
@@ -142,7 +143,9 @@
     	}
     } else if (mode == 1) {
     	for (id key in self.appList) {
+    		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
     		[body appendString:[NSString stringWithFormat:@"%@\n", key]];
+    		[body appendString:[NSString stringWithFormat:@"%@ - %@\n", key, info.version]];
     	}
     }
 
@@ -172,12 +175,11 @@
 	UIAlertAction* exportDetailed = [UIAlertAction actionWithTitle:@"Export (Detailed)" style:UIAlertActionStyleDefault
 	  handler:^(UIAlertAction * action) {
 	  	[self exportList:0];
-	  		NSLog(@"CALLED");
 	  }];
 
 	UIAlertAction* exportSimple = [UIAlertAction actionWithTitle:@"Export (Simple)" style:UIAlertActionStyleDefault
 	  handler:^(UIAlertAction * action) {
-	   	NSLog(@"CALLED 2");
+	  	[self exportList:1];
 	  }];
 	 
 	[alert addAction:cancelAction];

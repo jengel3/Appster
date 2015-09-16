@@ -54,7 +54,6 @@
 			@"com.apple.MobileReplayer",
 			@"com.apple.SiriViewService",
 			@"com.apple.TencentWeiboAccountMigrationDialog",
-			// iOS 8
 			@"com.apple.AskPermissionUI",
 			@"com.apple.CoreAuthUI",
 			@"com.apple.family",
@@ -144,7 +143,6 @@
     } else if (mode == 1) {
     	for (id key in self.appList) {
     		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
-    		[body appendString:[NSString stringWithFormat:@"%@\n", key]];
     		[body appendString:[NSString stringWithFormat:@"%@ - %@\n", key, info.version]];
     	}
     }
@@ -153,7 +151,6 @@
 
     [self presentViewController:mailCont animated:YES completion:nil];
 	} else { 
-		NSLog(@"CANT CoMPISE");
 	}
 }
 

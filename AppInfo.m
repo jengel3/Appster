@@ -18,11 +18,11 @@
     self.rawPath = [self valueForKey:@"path"];
 
     if ([rawPath hasPrefix:@"/Applications"]) {
-      self.type = @"System";
+      self.type = @"System App";
       self.folder = @"/Applications/";
       self.bundle = [self.rawPath stringByReplacingOccurrencesOfString:@"/Applications/" withString:@""];
     } else if ([self.rawPath hasPrefix:@"/private/"]) {
-      self.Type = @"iTunes";
+      self.Type = @"iTunes App";
 
       NSArray *split = [rawPath componentsSeparatedByString:@"/"];
       self.folder = [split objectAtIndex:[split count] - 2];

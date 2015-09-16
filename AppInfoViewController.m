@@ -43,7 +43,7 @@
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  return 3;
+  return 2;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -51,8 +51,6 @@
     return @"App Info";
   } else if (section == 1) {
     return @"Bundle";
-  } else if (section == 2) {
-    return @"Other Info";
   } else {
     return nil;
   }
@@ -111,11 +109,6 @@
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Type";
       cell.detailTextLabel.text = appType;
-    }
-  } else if (indexPath.section == 2) {
-    if (indexPath.row == 0) {
-      cell.textLabel.text = @"Version";
-      cell.detailTextLabel.text = [self valueForKey:@"Version"];
     }
   }
 

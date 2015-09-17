@@ -7,7 +7,7 @@ ADDITIONAL_OBJCFLAGS = -fobjc-arc
 include theos/makefiles/common.mk
 
 APPLICATION_NAME = Appster
-Appster_FILES = main.m AppsterApplication.mm $(wildcard *.m)
+Appster_FILES = $(wildcard Classes/*.mm) main.m $(wildcard Classes/*.m)
 Appster_FRAMEWORKS = UIKit CoreGraphics MessageUI
 
 Appster_LIBRARIES = applist

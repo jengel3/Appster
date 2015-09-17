@@ -1,3 +1,5 @@
+#import <AppList/AppList.h>
+
 @interface TweakListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
   @property (nonatomic, retain) NSArray *tweakList;
   @property (nonatomic, retain) NSDictionary *tweakMap;

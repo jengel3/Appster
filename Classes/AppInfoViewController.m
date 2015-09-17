@@ -4,6 +4,7 @@
 @implementation AppInfoViewController
 @synthesize identifier;
 @synthesize appName;
+@synthesize infoTable;
 
 -(void)viewDidLoad {
   self.title = identifier;

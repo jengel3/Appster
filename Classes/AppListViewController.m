@@ -5,8 +5,6 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
 
-#import <objc/runtime.h>
-
 @implementation AppListViewController
 @synthesize appList;
 @synthesize appTable;
@@ -75,16 +73,8 @@
 	return result;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        self.title = @"Applications";
-    }
-    return self;
-}
-
 - (void) viewDidLoad {
-	self.tabBarItem.title = @"appz";
+	self.title = @"Applications";
 	self.tabBarItem.image = [UIImage imageNamed:@"iTunes.png"];
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor whiteColor];
@@ -105,7 +95,7 @@
 }
 
 -(void)exportList:(int) mode {
-	if([MFMailComposeViewController canSendMail]) {
+	if ([MFMailComposeViewController canSendMail]) {
     MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
     mailCont.mailComposeDelegate = self;
     mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -150,7 +140,6 @@
     [mailCont setMessageBody:body isHTML:NO];
 
     [self presentViewController:mailCont animated:YES completion:nil];
-	} else { 
 	}
 }
 

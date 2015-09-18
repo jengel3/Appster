@@ -1,5 +1,4 @@
 #import "AppListViewController.h"
-#import "AppsterRootViewController.h"
 #import "TweakListViewController.h"
 
 @interface AppsterApplication: UIApplication <UIApplicationDelegate> {

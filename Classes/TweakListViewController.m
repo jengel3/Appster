@@ -30,7 +30,7 @@ float bestFit;
 
 	[self generateTweakInfoList];
 
-	[self loadApps];
+	[self.tweakTable reloadData];
 }
 
 -(void) showActionSheet:(id) sender {
@@ -225,12 +225,6 @@ float bestFit;
 
 	[(UINavigationController*)tabBarController.selectedViewController pushViewController:tweakView animated:YES];
 
-}
-
-- (void) loadApps {
-	[self generateTweakInfoList];
-
-	[self.tweakTable reloadData];
 }
 
 -(NSDictionary*)generateTweakInfoList {

@@ -17,20 +17,20 @@
 
   -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap {
     self.package = ident;
-    self.name = [self.tweakMap objectForKey:@"Name"];
+    self.name = [tweakMap objectForKey:@"Name"];
     if (!self.name) {
       self.name = package;
     }
 
-    self.depiction = [self.tweakMap objectForKey:@"Depiction"];
-    self.architecture = [self.tweakInfo objectForKey:@"Architecture"];
-    self.installSize = [self.tweakInfo objectForKey:@"Installed-Size"];
+    self.depiction = [tweakMap objectForKey:@"Depiction"];
+    self.architecture = [tweakMap objectForKey:@"Architecture"];
+    self.installSize = [tweakMap objectForKey:@"Installed-Size"];
 
-    self.author = [self.tweakMap objectForKey:@"Author"];
-    self.maintainer = [self.tweakMap objectForKey:@"Maintainer"];
-    self.version = [self.tweakMap objectForKey:@"Version"];
-    self.section = [self.tweakMap objectForKey:@"Section"];
-    self.description = [self.tweakMap objectForKey:@"Description"];
+    self.author = [tweakMap objectForKey:@"Author"];
+    self.maintainer = [tweakMap objectForKey:@"Maintainer"];
+    self.version = [tweakMap objectForKey:@"Version"];
+    self.section = [tweakMap objectForKey:@"Section"];
+    self.description = [tweakMap objectForKey:@"Description"];
 
     self.authorEmail = self.author ? [Utilities emailForControl:self.author] : nil;
     self.maintainerEmail = self.maintainer ? [Utilities emailForControl:self.maintainer] : nil;

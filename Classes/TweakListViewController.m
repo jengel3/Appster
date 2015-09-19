@@ -97,16 +97,26 @@ float bestFit;
 
     if (mode == 0) {
     	for (id key in self.tweakList) {
-    		TweakInfo *info = [[TweakInfo alloc] initWithIdentifier:key andInfo:self.tweakMap];
-    		[body appendString:[NSString stringWithFormat:@"%@<br>", info.name]];
-    		[body appendString:[NSString stringWithFormat:@"  Package: %@<br>", info.package]];
-    		[body appendString:[NSString stringWithFormat:@"  Version: %@<br>", info.version]];
-    		[body appendString:[NSString stringWithFormat:@"  Author: %@ <%@><br>", info.author, info.authorEmail]];
+    		NSDictionary *tweak = [self.tweakMap objectForKey:key];
+    		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", key]];
     	
-    		[body appendString:@"<br><br>"];
+    		NSArray *keys = [tweak allKeys];
+    		for (id item in keys) {
+    			[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", item, [tweak objectForKey:item]]];
+    		}
+    	
+    		[body appendString:@"<br>"];
     	}
     } else if (mode == 1) {
-    	
+    	for (id key in self.tweakList) {
+    		NSDictionary *tweak = [self.tweakMap objectForKey:key];
+    		NSString *name = [tweak objectForKey:@"Name"];
+    		NSString *version = [tweak objectForKey:@"Version"];
+    		if (!version) version = @"N/A";
+    		if (!name) name = key;
+
+    		[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", name, version]];
+    	}
     }
 
     [mailCont setMessageBody:body isHTML:YES];

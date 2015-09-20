@@ -3,11 +3,12 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "MBProgressHUD.h"
+#import "TweakInfo.h"
 
 @implementation TweakInfoViewController
 @synthesize package;
 @synthesize name;
-@synthesize tweakInfo;
+@synthesize info;
 @synthesize infoTable;
 
 - (void) viewDidLoad {
@@ -23,18 +24,6 @@
   self.infoTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
   self.infoTable.dataSource = self;
   self.infoTable.delegate = self;
-
-  self.depiction = [self.tweakInfo objectForKey:@"Depiction"];
-
-  self.author = [self.tweakInfo objectForKey:@"Author"];
-  self.maintainer = [self.tweakInfo objectForKey:@"Maintainer"];
-  self.version = [self.tweakInfo objectForKey:@"Version"];
-
-  self.authorEmail = self.author ? [Utilities emailForControl:self.author] : nil;
-  self.maintainerEmail = self.maintainer ? [Utilities emailForControl:self.maintainer] : nil;
-
-  self.author = self.authorEmail ? [Utilities usernameForControl:self.author andEmail:self.authorEmail] : self.author;
-  self.maintainer = self.maintainerEmail ? [Utilities usernameForControl:self.maintainer andEmail:self.maintainerEmail] : self.maintainer;
 
   [self.view addSubview:self.infoTable];
 
@@ -69,7 +58,7 @@
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Cydia Tweak Export - %@ <br><br>", timestamp]];
 
-    NSArray *keys = [self.tweakInfo allKeys];
+    NSArray *keys = [self.info.rawData allKeys];
 
     [body appendString:[NSString stringWithFormat:@"<b>%@</b><br><br>", self.name ? self.name : self.package]];
 
@@ -78,7 +67,7 @@
     for (id key in keys) {
       if ([key isEqualToString:@"Name"]) continue;
 
-      [body appendString:[NSString stringWithFormat:@"<b>%@</b>: %@<br>", key, [tweakInfo objectForKey:key]]];
+      [body appendString:[NSString stringWithFormat:@"<b>%@</b>: %@<br>", key, [self.info.rawData objectForKey:key]]];
     }
 
     [mailCont setMessageBody:body isHTML:YES];
@@ -138,12 +127,12 @@
       cell.detailTextLabel.text = self.version;
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Section";
-      cell.detailTextLabel.text = [self.tweakInfo objectForKey:@"Section"];
+      cell.detailTextLabel.text = self.info.section;
     }
   } else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Description";
-      cell.detailTextLabel.text = [self.tweakInfo objectForKey:@"Description"];
+      cell.detailTextLabel.text = self.info.description;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Author";
       cell.detailTextLabel.text = self.author;
@@ -152,10 +141,10 @@
       cell.detailTextLabel.text = self.maintainer;
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Install Size";
-      cell.detailTextLabel.text = [self.tweakInfo objectForKey:@"Installed-Size"];
+      cell.detailTextLabel.text = self.info.installSize;
     } else if (indexPath.row == 4) {
       cell.textLabel.text = @"Architecture";
-      cell.detailTextLabel.text = [self.tweakInfo objectForKey:@"Architecture"];
+      cell.detailTextLabel.text = self.info.architecture;
     }
   } else if (indexPath.section == 2) {
     if (cell == nil) {

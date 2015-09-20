@@ -12,6 +12,8 @@
   @property (nonatomic, retain) NSString *installSize;
   @property (nonatomic, retain) NSString *section;
   @property (nonatomic, retain) NSString *depiction;
+  @property (nonatomic, retain) NSDictionary *rawData;
 
   -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap;
+  +(id)tweakForProperty:(NSString*)prop withValue:(NSString*)val andData:(NSMutableArray*)data;
 @end

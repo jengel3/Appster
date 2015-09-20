@@ -96,24 +96,21 @@ float bestFit;
     [body appendString:[NSString stringWithFormat:@"Cydia Tweaks Export - %@<br><br>", timestamp]];
 
     if (mode == 0) {
-    	for (id key in self.tweakList) {
-    		NSDictionary *tweak = [self.tweakMap objectForKey:key];
-    		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", key]];
+    	for (TweakInfo* tweak in self.tweakData) {
+    		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", tweak.package]];
     	
-    		NSArray *keys = [tweak allKeys];
+    		NSArray *keys = [tweak.rawData allKeys];
     		for (id item in keys) {
-    			[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", item, [tweak objectForKey:item]]];
+    			[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", item, [tweak.rawData objectForKey:item]]];
     		}
     	
     		[body appendString:@"<br>"];
     	}
     } else if (mode == 1) {
-    	for (id key in self.tweakList) {
-    		NSDictionary *tweak = [self.tweakMap objectForKey:key];
-    		NSString *name = [tweak objectForKey:@"Name"];
-    		NSString *version = [tweak objectForKey:@"Version"];
+    	for (TweakInfo* tweak in self.tweakData) {
+    		NSString *name = tweak.name;
+    		NSString *version = tweak.version;
     		if (!version) version = @"N/A";
-    		if (!name) name = key;
 
     		[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", name, version]];
     	}
@@ -132,7 +129,7 @@ float bestFit;
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
 	if (tableView != self.tweakTable)	return 0;
 
-	return [self.tweakMap count];
+	return [self.tweakList count];
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
@@ -150,8 +147,8 @@ float bestFit;
 
 	NSString *key = [self.tweakList objectAtIndex:indexPath.row];
 
-	NSDictionary *tweak = (NSDictionary*)[self.tweakMap objectForKey:key];
-	NSString *name = [tweak objectForKey:@"Name"];
+	TweakInfo *tweak = [TweakInfo tweakForProperty:@"package" withValue:key andData:self.tweakData];
+	NSString *name = tweak.name;
 
 	if (!name) {
 		cell.textLabel.text = key;
@@ -160,8 +157,8 @@ float bestFit;
 		cell.detailTextLabel.text = key;
 	}
 
-	NSString *iconPath = [tweak objectForKey:@"Icon"];
-	NSString *section = [tweak objectForKey:@"Section"];
+	NSString *iconPath = [tweak.rawData objectForKey:@"Icon"];
+	NSString *section = tweak.version;
 	bool existed = false;
 
 	if (iconPath) {
@@ -219,7 +216,7 @@ float bestFit;
 	TweakInfoViewController *tweakView = [[TweakInfoViewController alloc] init];
 	tweakView.package = pkg;
 	tweakView.name = name;
-	tweakView.tweakInfo = [self.tweakMap objectForKey:pkg];
+	tweakView.info = [TweakInfo tweakForProperty:@"package" withValue:pkg andData:self.tweakData];
 
 	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
 
@@ -227,13 +224,20 @@ float bestFit;
 
 }
 
--(NSDictionary*)generateTweakInfoList {
-	if (!self.tweakMap) {
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    self.searchResults = [self.tweakList filteredArrayUsingPredicate:filter];
+}
+
+-(NSArray*)generateTweakInfoList {
+	if (!self.tweakData) {
 		NSData* data = [NSData dataWithContentsOfFile:@"/var/lib/dpkg/status"];
 		NSString* string = [[NSString alloc] 
 			initWithBytes:[data bytes]
 	   	length:[data length] 
 	  	encoding:NSUTF8StringEncoding];
+
+		self.tweakData = [[NSMutableArray alloc] init];
 
 		NSArray* items = [string componentsSeparatedByString:@"\n"];
 
@@ -270,12 +274,17 @@ float bestFit;
 		for (id r in removed) {
 			[response removeObjectForKey:r];
 		}
-	
-		self.tweakMap = response;
+
+		for (id tweak in response) {
+			NSDictionary *map = [response objectForKey:tweak];
+			TweakInfo *info = [[TweakInfo alloc] initWithIdentifier:tweak andInfo:map];
+			[self.tweakData addObject:info];
+		}
+
 		self.tweakList = [response allKeys];
 	}
 
-	return self.tweakMap;
+	return self.tweakData;
 }
 
 

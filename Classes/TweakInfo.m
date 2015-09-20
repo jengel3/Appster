@@ -14,10 +14,12 @@
   @synthesize installSize;
   @synthesize section;
   @synthesize depiction;
+  @synthesize rawData;
 
   -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap {
     self.package = ident;
     self.name = [tweakMap objectForKey:@"Name"];
+    self.rawData = tweakMap;
     if (!self.name) {
       self.name = package;
     }
@@ -39,5 +41,16 @@
     self.maintainer = self.maintainerEmail ? [Utilities usernameForControl:self.maintainer andEmail:self.maintainerEmail] : self.maintainer;
 
     return self;
+  }
+
+  +(id)tweakForProperty:(NSString*)prop withValue:(NSString*)val andData:(NSMutableArray*)data {
+    NSLog(@"CALLED %@ -- %@ -- %@", prop, val, data);
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ == %@", prop, val]];
+    NSArray *filtered = [data filteredArrayUsingPredicate:predicate];
+    if (filtered) {
+      NSLog(@"NOT NIl");
+      return (TweakInfo*)[filtered objectAtIndex:0];
+    }
+    return nil;
   }
 @end

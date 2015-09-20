@@ -1,5 +1,6 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
+#import "TweakInfo.h"
 
 @interface TweakInfoViewController : UIViewController  <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
   @property (nonatomic, retain) NSString *package;
@@ -13,6 +14,6 @@
 
   @property (nonatomic, retain) NSString *depiction;
 
-  @property (nonatomic, retain) NSDictionary *tweakInfo;
+  @property (nonatomic, retain) TweakInfo *info;
   @property (nonatomic, retain) UITableView  *infoTable;
 @end

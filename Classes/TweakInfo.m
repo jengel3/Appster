@@ -27,12 +27,12 @@
     self.depiction = [tweakMap objectForKey:@"Depiction"];
     self.architecture = [tweakMap objectForKey:@"Architecture"];
     self.installSize = [tweakMap objectForKey:@"Installed-Size"];
-
-    self.author = [tweakMap objectForKey:@"Author"];
-    self.maintainer = [tweakMap objectForKey:@"Maintainer"];
     self.version = [tweakMap objectForKey:@"Version"];
     self.section = [tweakMap objectForKey:@"Section"];
     self.description = [tweakMap objectForKey:@"Description"];
+
+    self.author = [tweakMap objectForKey:@"Author"];
+    self.maintainer = [tweakMap objectForKey:@"Maintainer"];
 
     self.authorEmail = self.author ? [Utilities emailForControl:self.author] : nil;
     self.maintainerEmail = self.maintainer ? [Utilities emailForControl:self.maintainer] : nil;
@@ -44,11 +44,9 @@
   }
 
   +(id)tweakForProperty:(NSString*)prop withValue:(NSString*)val andData:(NSMutableArray*)data {
-    NSLog(@"CALLED %@ -- %@ -- %@", prop, val, data);
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ == %@", prop, val]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ == '%@'", prop, val]];
     NSArray *filtered = [data filteredArrayUsingPredicate:predicate];
     if (filtered) {
-      NSLog(@"NOT NIl");
       return (TweakInfo*)[filtered objectAtIndex:0];
     }
     return nil;

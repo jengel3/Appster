@@ -226,7 +226,7 @@ float bestFit;
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
     NSPredicate *filter = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    self.searchResults = [self.tweakList filteredArrayUsingPredicate:filter];
+    self.searchResults = [self.tweakData filteredArrayUsingPredicate:filter];
 }
 
 -(NSArray*)generateTweakInfoList {

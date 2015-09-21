@@ -73,8 +73,15 @@
 	return result;
 }
 
-- (void) viewDidLoad {
-	self.title = @"Applications";
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  if (self) {
+    self.title = @"Applications";
+  }
+  return self;
+}
+
+- (void)viewDidLoad {
 	self.tabBarItem.image = [UIImage imageNamed:@"iTunes.png"];
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor whiteColor];

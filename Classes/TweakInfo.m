@@ -15,6 +15,7 @@
   @synthesize section;
   @synthesize depiction;
   @synthesize rawData;
+  @synthesize installed;
 
   -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap {
     self.package = ident;
@@ -30,6 +31,14 @@
     self.version = [tweakMap objectForKey:@"Version"];
     self.section = [tweakMap objectForKey:@"Section"];
     self.description = [tweakMap objectForKey:@"Description"];
+
+    NSString *rawStatus = [tweakMap objectForKey:@"Status"];
+
+    if ([rawStatus rangeOfString:@"deinstall"].location == NSNotFound) {
+      self.installed = YES;
+    } else {
+      self.installed = NO;
+    }
 
     self.author = [tweakMap objectForKey:@"Author"];
     self.maintainer = [tweakMap objectForKey:@"Maintainer"];

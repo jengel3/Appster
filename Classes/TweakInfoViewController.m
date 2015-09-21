@@ -118,13 +118,13 @@
   if (indexPath.section == 0) {
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Name";
-      cell.detailTextLabel.text = self.name;
+      cell.detailTextLabel.text = self.info.name;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Package";
-      cell.detailTextLabel.text = self.package;
+      cell.detailTextLabel.text = self.info.package;
     } else if (indexPath.row == 2) {
       cell.textLabel.text = @"Version";
-      cell.detailTextLabel.text = self.version;
+      cell.detailTextLabel.text = self.info.version;
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Section";
       cell.detailTextLabel.text = self.info.section;
@@ -135,10 +135,10 @@
       cell.detailTextLabel.text = self.info.description;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Author";
-      cell.detailTextLabel.text = self.author;
+      cell.detailTextLabel.text = self.info.author;
     } else if (indexPath.row == 2) {
       cell.textLabel.text = @"Maintainer";
-      cell.detailTextLabel.text = self.maintainer;
+      cell.detailTextLabel.text = self.info.maintainer;
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Install Size";
       cell.detailTextLabel.text = self.info.installSize;
@@ -151,27 +151,27 @@
       cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     if (indexPath.row == 0) {
-      if (!self.authorEmail) {
+      if (!self.info.authorEmail) {
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
         cell.detailTextLabel.enabled = NO;
       }
       cell.textLabel.text = @"Email Author";
-      cell.detailTextLabel.text = self.authorEmail;
-      cell.imageView.image = [UIImage imageNamed:@"TwitterIcon.png"];
+      cell.detailTextLabel.text = self.info.authorEmail;
+      cell.imageView.image = [UIImage imageNamed:@"Mail.png"];
      } else if (indexPath.row == 1) {
-      if (!self.maintainerEmail) {
+      if (!self.info.maintainerEmail) {
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
         cell.detailTextLabel.enabled = NO;
       }
       cell.textLabel.text = @"Email Maintainer";
-      cell.detailTextLabel.text = self.maintainerEmail;
-      cell.imageView.image = [UIImage imageNamed:@"TwitterIcon.png"];
+      cell.detailTextLabel.text = self.info.maintainerEmail;
+      cell.imageView.image = [UIImage imageNamed:@"Mail.png"];
     } else if (indexPath.row == 2) {
       cell.textLabel.text = @"Open Depiction";
       cell.detailTextLabel.text = self.depiction;
-      cell.imageView.image = [UIImage imageNamed:@"TwitterIcon.png"];
+      cell.imageView.image = [UIImage imageNamed:@"Safari.png"];
     }
   }
 
@@ -190,6 +190,7 @@
     }
   } else {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (!cell.detailTextLabel || !cell.detailTextLabel.text) return;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = cell.detailTextLabel.text;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -206,11 +207,11 @@
     NSString *recipName;
     NSString *recip;
     if (user == 0) {
-      recipName = self.author;
-      recip = self.authorEmail;
+      recipName = self.info.author;
+      recip = self.info.authorEmail;
     } else if (user == 1) {
-      recipName = self.maintainer;
-      recip = self.maintainerEmail;
+      recipName = self.info.maintainer;
+      recip = self.info.maintainerEmail;
     }
 
     MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];

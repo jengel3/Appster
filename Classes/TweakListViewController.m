@@ -11,6 +11,14 @@ float bestFit;
 @synthesize tweakList;
 @synthesize tweakTable;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+  if (self) {
+    self.title = @"Cydia Tweaks";
+  }
+  return self;
+}
+
 - (void) viewDidLoad {
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.title = @"Cydia Tweaks";
@@ -20,6 +28,17 @@ float bestFit;
 	self.tweakTable.dataSource = self;
 	self.tweakTable.delegate = self;
 
+  self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+  self.searchController.searchResultsUpdater = self;
+  self.searchController.dimsBackgroundDuringPresentation = NO;
+  self.searchController.searchBar.scopeButtonTitles = @[@"Name", @"Package", @"Author"];
+  self.searchController.searchBar.delegate = self;
+
+  self.tweakTable.tableHeaderView = self.searchController.searchBar;
+
+  self.definesPresentationContext = YES;
+  [self.searchController.searchBar sizeToFit];
+
 	UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
 		style:UIBarButtonItemStylePlain 
 		target:self
@@ -28,9 +47,10 @@ float bestFit;
 
 	[self.view addSubview:self.tweakTable];
 
+  self.searchResults = [[NSArray alloc] init];
 	[self generateTweakInfoList];
 
-	[self.tweakTable reloadData];
+	[self reload];
 }
 
 -(void) showActionSheet:(id) sender {
@@ -53,16 +73,9 @@ float bestFit;
 	  	[self exportList:1];
 	  }];
 
-	UIAlertAction* sortAction = [UIAlertAction actionWithTitle:@"Sort" style:UIAlertActionStyleDefault
-	  handler:^(UIAlertAction * action) {
-	  	
-	  }];
- 
-
 	[alert addAction:cancelAction];
 	[alert addAction:exportDetailed];
 	[alert addAction:exportSimple];
-	[alert addAction:sortAction];
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -129,11 +142,15 @@ float bestFit;
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
 	if (tableView != self.tweakTable)	return 0;
 
-	return [self.tweakList count];
+  if (self.searchController.active) {
+    return [self.searchResults count];
+  } else {
+    return [self.tweakData count];
+  }
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-	return 1;
+  return 1;
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
@@ -145,20 +162,25 @@ float bestFit;
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
 	}
 
-	NSString *key = [self.tweakList objectAtIndex:indexPath.row];
+  TweakInfo *tweak;
 
-	TweakInfo *tweak = [TweakInfo tweakForProperty:@"package" withValue:key andData:self.tweakData];
+  if (self.searchController.active) {
+    tweak = (TweakInfo*)[self.searchResults objectAtIndex:indexPath.row];
+  } else {
+    tweak = (TweakInfo*)[self.tweakData objectAtIndex:indexPath.row];
+  }
+
 	NSString *name = tweak.name;
 
 	if (!name) {
-		cell.textLabel.text = key;
+		cell.textLabel.text = tweak.package;
 	} else {
 		cell.textLabel.text = name;
-		cell.detailTextLabel.text = key;
+		cell.detailTextLabel.text = tweak.package;
 	}
 
 	NSString *iconPath = [tweak.rawData objectForKey:@"Icon"];
-	NSString *section = tweak.version;
+	NSString *section = tweak.section;
 	bool existed = false;
 
 	if (iconPath) {
@@ -224,9 +246,31 @@ float bestFit;
 
 }
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    self.searchResults = [self.tweakData filteredArrayUsingPredicate:filter];
+- (void)searchForText:(NSString*)searchText scope:(int)scope {
+  NSString *key;
+  if (scope == 0) {
+    key = @"name";
+  } else if (scope == 1) {
+    key = @"package";
+  } else if (scope == 2) {
+    key = @"author";
+  }
+  NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K contains[c] %@", key, searchText];
+  self.searchResults = [self.tweakData filteredArrayUsingPredicate:filter];
+}
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+  NSString *searchString = searchController.searchBar.text;
+  [self searchForText:searchString scope:searchController.searchBar.selectedScopeButtonIndex];
+  [self reload];
+}
+
+- (void)reload {
+  [self.tweakTable reloadData];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+  [self updateSearchResultsForSearchController:self.searchController];
 }
 
 -(NSArray*)generateTweakInfoList {
@@ -280,6 +324,11 @@ float bestFit;
 			TweakInfo *info = [[TweakInfo alloc] initWithIdentifier:tweak andInfo:map];
 			[self.tweakData addObject:info];
 		}
+
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"installed == 1"];
+    NSArray *sorting = [self.tweakData filteredArrayUsingPredicate:filter];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    self.tweakData = [[sorting sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
 
 		self.tweakList = [response allKeys];
 	}

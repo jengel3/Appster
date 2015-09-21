@@ -1,12 +1,12 @@
 #import <AppList/AppList.h>
 #import <MessageUI/MFMailComposeViewController.h> 
 
-@interface TweakListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface TweakListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
   @property (nonatomic, retain) NSArray *tweakList;
   @property (nonatomic, retain) NSArray *searchResults;
   @property (nonatomic, retain) NSMutableArray *tweakData;
   @property (nonatomic, retain) UITableView *tweakTable;
-  @property (nonatomic, retain) UISearchBar *searchBar;
+  @property (strong, nonatomic) UISearchController *searchController;
 
   -(NSDictionary*)generateTweakInfoList;
 @end

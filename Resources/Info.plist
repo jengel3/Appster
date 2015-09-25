@@ -1,6 +1,6 @@
 {
     CFBundleExecutable = "Appster";
-    CFBundleIconFile = icon.png;
+    CFBundleIconFile = Icon.png;
     CFBundleIdentifier = "com.jake0oo0.appster";
     CFBundleInfoDictionaryVersion = 6.0;
     CFBundlePackageType = APPL;

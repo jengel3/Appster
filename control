@@ -1,6 +1,5 @@
 Package: com.jake0oo0.appster
 Name: Appster
-Depends: 
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description: Get important info for installed apps and tweaks

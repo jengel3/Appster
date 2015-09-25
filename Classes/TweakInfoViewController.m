@@ -4,6 +4,7 @@
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "MBProgressHUD.h"
 #import "TweakInfo.h"
+#import "InstalledFilesViewController.h"
 
 @implementation TweakInfoViewController
 @synthesize package;
@@ -83,8 +84,8 @@
   } else if (section == 1) {
     return 5;
   } else if (section == 2) {
-    if (self.depiction) return 3;
-    return 2;
+    if (self.depiction) return 4;
+    return 3;
   }
   return 0;
 }
@@ -151,6 +152,9 @@
       cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     if (indexPath.row == 0) {
+      cell.textLabel.text = @"Installed Files";
+      cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
+    } else if (indexPath.row == 1) {
       if (!self.info.authorEmail) {
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
@@ -159,7 +163,7 @@
       cell.textLabel.text = @"Email Author";
       cell.detailTextLabel.text = self.info.authorEmail;
       cell.imageView.image = [UIImage imageNamed:@"Mail.png"];
-     } else if (indexPath.row == 1) {
+     } else if (indexPath.row == 2) {
       if (!self.info.maintainerEmail) {
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
@@ -168,7 +172,7 @@
       cell.textLabel.text = @"Email Maintainer";
       cell.detailTextLabel.text = self.info.maintainerEmail;
       cell.imageView.image = [UIImage imageNamed:@"Mail.png"];
-    } else if (indexPath.row == 2) {
+    } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Open Depiction";
       cell.detailTextLabel.text = self.depiction;
       cell.imageView.image = [UIImage imageNamed:@"Safari.png"];
@@ -182,10 +186,17 @@
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
   if (indexPath.section == 2) {
     if (indexPath.row == 0) {
-      [self sendEmail:0];
+      InstalledFilesViewController *fileList = [[InstalledFilesViewController alloc] init];
+      fileList.package = self.info.package;
+
+      UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+
+      [(UINavigationController*)tabBarController.selectedViewController pushViewController:fileList animated:YES];
     } else if (indexPath.row == 1) {
-      [self sendEmail:1];
+      [self sendEmail:0];
     } else if (indexPath.row == 2) {
+      [self sendEmail:1];
+    } else if (indexPath.row == 3) {
       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.depiction]];
     }
   } else {

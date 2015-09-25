@@ -1,5 +1,7 @@
 #import "AppListViewController.h"
 #import "TweakListViewController.h"
+#import "AppleExportHubViewController.h"
+#import "InstalledFilesViewController.h"
 
 @interface AppsterApplication: UIApplication <UIApplicationDelegate> {
 	UIWindow *_window;
@@ -26,12 +28,16 @@
 	UINavigationController *tweakListNav = [[UINavigationController alloc] initWithRootViewController:tweakList];
 	tweakListNav.tabBarItem.image = [UIImage imageNamed:@"Cydia.png"];
 
+	AppleExportHubViewController *exportHub = [[AppleExportHubViewController alloc] init];
+	UINavigationController *exportNav = [[UINavigationController alloc] initWithRootViewController:exportHub];
+	exportNav.tabBarItem.image = [UIImage imageNamed:@"Apple@3x.png"];
 
-	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, nil];
+
+	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, nil];
 	self.tabBarController.viewControllers = controllers;
 
 	self.window.backgroundColor = [UIColor whiteColor];
-	self.window.rootViewController = tabBarController;
+	self.window.rootViewController = self.tabBarController;
 
 	[self.window makeKeyAndVisible];
 }

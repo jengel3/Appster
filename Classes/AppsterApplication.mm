@@ -42,7 +42,4 @@
 	[self.window makeKeyAndVisible];
 }
 
-
 @end
-
-// vim:ft=objc

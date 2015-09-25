@@ -9,7 +9,7 @@ APPLICATION_NAME = Appster
 Appster_FILES = $(wildcard Classes/*.mm) main.m $(wildcard Classes/*.m)
 Appster_FRAMEWORKS = UIKit CoreGraphics MessageUI
 Appster_PRIVATE_FRAMEWORKS = ChatKit
-
+Appster_LDFLAGS=-lsqlite3
 Appster_LIBRARIES = applist
 
 include $(THEOS_MAKE_PATH)/application.mk

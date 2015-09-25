@@ -128,23 +128,23 @@
     [mailCont setToRecipients:nil];
 
     NSMutableString *body = [[NSMutableString alloc] init];
-    [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ \n\n\n", timestamp]];
+    [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
 
     if (mode == 0) {
     	for (id key in self.appList) {
     		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
-    		[body appendString:[NSString stringWithFormat:@"%@\n", key]];
+    		[body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", key]];
     		[body appendString:[NSString stringWithFormat:@"  Version: %@", info.version]];
-    		[body appendString:@"\n\n"];
+    		[body appendString:@"<br><br>"];
     	}
     } else if (mode == 1) {
     	for (id key in self.appList) {
     		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
-    		[body appendString:[NSString stringWithFormat:@"%@ - %@\n", key, info.version]];
+    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", key, info.version]];
     	}
     }
 
-    [mailCont setMessageBody:body isHTML:NO];
+    [mailCont setMessageBody:body isHTML:YES];
 
     [self presentViewController:mailCont animated:YES completion:nil];
 	}
@@ -228,7 +228,7 @@
 
 }
 
-- (void) loadApps {
+- (void)loadApps {
 	self.applications = nil;
 	self.applications = [ALApplicationList sharedApplicationList];
 

@@ -1,5 +1,6 @@
 #import "AppInfoViewController.h"
 #import <AppList/AppList.h>
+#import "MBProgressHUD.h"
 
 @implementation AppInfoViewController
 @synthesize identifier;
@@ -120,7 +121,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  if (!cell.detailTextLabel || !cell.detailTextLabel.text) return;
+  UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+  pasteboard.string = cell.detailTextLabel.text;
+  MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  hud.labelText = @"Copied!";
+  hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+  hud.mode = MBProgressHUDModeCustomView;
 
+  [hud hide:YES afterDelay:0.5];
 }
 
 - (id)valueForKey:(NSString*)key {

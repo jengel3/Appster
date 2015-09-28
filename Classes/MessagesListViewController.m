@@ -29,7 +29,7 @@
 }
 
 - (void) loadData {
-  self.chatList = [self findSMS];
+  self.chatList = [self findChats];
   [self.chatTable reloadData];
 }
 
@@ -52,8 +52,7 @@
   if (cell == nil) {
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
   }
-  NSLog(@"CALLED");
-
+  
   NSString *text = [self.chatList objectAtIndex:indexPath.row];
   cell.textLabel.text = text;
   cell.imageView.image = [UIImage imageNamed:@"Messages.png"];
@@ -76,8 +75,7 @@
 
 }
 
-- (NSMutableArray*) findSMS
-{
+- (NSMutableArray*) findChats {
     NSString *path = @"/var/mobile/Library/SMS/sms.db";
     sqlite3_stmt *statement;
 
@@ -93,11 +91,11 @@
     if (sqlite3_prepare_v2(smsDb, [querySQL UTF8String], -1, &statement, NULL) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
           NSString *guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
+          guid = [guid componentsSeparatedByString:@";"][2];
           [resultArray addObject:guid];
         }
         sqlite3_reset(statement);
     }
-    NSLog(@"FINISHED");
     return [resultArray copy];
 }
 

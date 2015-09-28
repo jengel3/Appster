@@ -92,9 +92,22 @@
 		action:@selector(showActionSheet:)];          
   self.navigationItem.rightBarButtonItem = anotherButton;
 
-	self.appTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+	self.appTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	self.appTable.dataSource = self;
 	self.appTable.delegate = self;
+
+  self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+  self.searchController.searchResultsUpdater = self;
+  self.searchController.dimsBackgroundDuringPresentation = NO;
+  self.searchController.searchBar.scopeButtonTitles = @[@"Name", @"Identifier"];
+  self.searchController.searchBar.delegate = self;
+
+  self.appTable.tableHeaderView = self.searchController.searchBar;
+
+  self.definesPresentationContext = YES;
+  [self.searchController.searchBar sizeToFit];
+
+  self.searchResults = [[NSArray alloc] init];
 
 	[self.view addSubview:self.appTable];
 
@@ -131,16 +144,14 @@
     [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
 
     if (mode == 0) {
-    	for (id key in self.appList) {
-    		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
-    		[body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", key]];
-    		[body appendString:[NSString stringWithFormat:@"  Version: %@", info.version]];
+    	for (AppInfo* app in self.appList) {
+    		[body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", app.name]];
+    		[body appendString:[NSString stringWithFormat:@"  Version: %@", app.version]];
     		[body appendString:@"<br><br>"];
     	}
     } else if (mode == 1) {
-    	for (id key in self.appList) {
-    		AppInfo *info = [[AppInfo alloc] initWithDisplay:key withApplications:self.applications];
-    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", key, info.version]];
+    	for (AppInfo* app in self.appList) {
+    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, app.version]];
     	}
     }
 
@@ -182,14 +193,33 @@
 }
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-	if (tableView == self.appTable) {
-		return ([self.appList count]);
-	}
-	return 0;
+	if (tableView != self.appTable) return 0;
+  if (self.searchController.active) {
+    return [self.searchResults count];
+  }
+  if (section == 0) {
+    return [self.mobileApps count];
+  } else if (section == 1) {
+    return [self.systemApps count];
+  }
+  return 0;
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-	return 1;
+  if (self.searchController.active) {
+    return 1;
+  }
+	return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+  if (self.searchController.active) return nil;
+  if (section == 0) {
+    return @"Mobile Apps";
+  } else if (section == 1) {
+    return @"System Apps";
+  }
+  return nil;
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
@@ -201,26 +231,36 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 	}
 
-	NSString *name = [self.appList objectAtIndex:indexPath.row];
-	NSArray *t = [self.applications.applications allKeysForObject:name];
-	NSString *identifier = [t lastObject];
+  AppInfo *app;
+  if (self.searchController.active) {
+    app = (AppInfo*)[self.searchResults objectAtIndex:indexPath.row];
+  } else if (indexPath.section == 0) {
+    app = (AppInfo*)[self.mobileApps objectAtIndex:indexPath.row];
+  } else if (indexPath.section == 1) {
+    app = (AppInfo*)[self.systemApps objectAtIndex:indexPath.row];
+  }
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	cell.textLabel.text = name;
+	cell.textLabel.text = app.name;
 
-	cell.imageView.image = [self.applications iconOfSize:ALApplicationIconSizeSmall forDisplayIdentifier:identifier];
+	cell.imageView.image = [self.applications iconOfSize:ALApplicationIconSizeSmall forDisplayIdentifier:app.identifier];
 
 	return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-	NSString *name = [self.appList objectAtIndex:indexPath.row];
-	NSArray *t = [self.applications.applications allKeysForObject:name];
-	NSString *identifier = [t lastObject];
+  AppInfo *app;
+  if (self.searchController.active) {
+    app = (AppInfo*)[self.searchResults objectAtIndex:indexPath.row];
+  } else if (indexPath.section == 0) {
+    app = (AppInfo*)[self.mobileApps objectAtIndex:indexPath.row];
+  } else if (indexPath.section == 1) {
+    app = (AppInfo*)[self.systemApps objectAtIndex:indexPath.row];
+  }
 	
 	AppInfoViewController *appView = [[AppInfoViewController alloc] init];
-	appView.identifier = identifier;
+	appView.identifier = app.identifier;
 
 	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
 
@@ -228,12 +268,31 @@
 
 }
 
+- (void)searchForText:(NSString*)searchText scope:(int)scope {
+  NSString *key;
+  if (scope == 0) {
+    key = @"name";
+  } else if (scope == 1) {
+    key = @"identifier";
+  }
+  NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K contains[c] %@", key, searchText];
+  self.searchResults = [self.appList filteredArrayUsingPredicate:filter];
+}
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+  NSString *searchString = searchController.searchBar.text;
+  [self searchForText:searchString scope:searchController.searchBar.selectedScopeButtonIndex];
+  [self.appTable reloadData];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+  [self updateSearchResultsForSearchController:self.searchController];
+}
+
 - (void)loadApps {
-	self.applications = nil;
 	self.applications = [ALApplicationList sharedApplicationList];
 
-	self.appList = nil;
-	self.appList = [[NSMutableArray alloc] init];
+	NSMutableArray *apps = [[NSMutableArray alloc] init];
 
 	NSDictionary *raw = [self.applications applicationsFilteredUsingPredicate:nil];
 	NSMutableDictionary *copy = [raw mutableCopy];
@@ -241,12 +300,27 @@
 	[copy removeObjectsForKeys:[self _hiddenDisplayIdentifiers]];
 
 	for (id key in copy) {
-		NSString *val = [copy objectForKey:key];
-		[self.appList addObject:val];
+    AppInfo *app = [[AppInfo alloc] initWithIndentifier:key withApplications:self.applications];
+		[apps addObject:app];
 	}
+
+  NSArray *sorted = [apps sortedArrayUsingComparator: ^(AppInfo *a, AppInfo *b) {
+    return [a.name compare:b.name];
+  }];
+  
+  self.appList = [sorted mutableCopy];
+
+  self.systemApps = [[NSMutableArray alloc] init];
+  self.mobileApps = [[NSMutableArray alloc] init];
+
+  for (AppInfo* app in self.appList) {
+    if ([app.type isEqualToString:@"System"]) {
+      [self.systemApps addObject:app];
+    } else {
+      [self.mobileApps addObject:app];
+    }
+  }
 
 	[self.appTable reloadData];
 }
-
-
 @end

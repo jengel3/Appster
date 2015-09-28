@@ -257,6 +257,7 @@ float bestFit;
   }
   NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K contains[c] %@", key, searchText];
   self.searchResults = [self.tweakData filteredArrayUsingPredicate:filter];
+  NSLog(@"THESE RESULTS %@", self.searchResults);
 }
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {

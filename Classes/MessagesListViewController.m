@@ -1,5 +1,7 @@
 #import "MessagesListViewController.h"
+#import "SMSListViewController.h"
 #import <sqlite3.h> 
+#import "SMSChat.h"
 
 @implementation MessagesListViewController
 @synthesize chatTable;
@@ -40,7 +42,6 @@
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
   if (tableView != self.chatTable) return 0;
-  NSLog(@"COUNT %d", (int)[self.chatList count]);
   return [self.chatList count];
 }
 
@@ -53,8 +54,8 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
   }
   
-  NSString *text = [self.chatList objectAtIndex:indexPath.row];
-  cell.textLabel.text = text;
+  SMSChat *chat = [self.chatList objectAtIndex:indexPath.row];
+  cell.textLabel.text = chat.guid;
   cell.imageView.image = [UIImage imageNamed:@"Messages.png"];
 
 
@@ -66,12 +67,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-  // UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  SMSChat *chat = (SMSChat*)[self.chatList objectAtIndex:indexPath.row];
 
+  SMSListViewController *msgList = [SMSListViewController alloc];
+  msgList.chatId = chat.chatId;
 
-  // UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+  UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
 
-  // [(UINavigationController*)tabBarController.selectedViewController pushViewController:tweakView animated:YES];
+  [(UINavigationController*)tabBarController.selectedViewController pushViewController:msgList animated:YES];
 
 }
 
@@ -86,17 +89,23 @@
         return nil;
     }
 
-    NSString *querySQL = @"SELECT guid,group_id FROM chat ORDER BY guid";
+    NSString *querySQL = @"SELECT guid,rowid FROM chat ORDER BY guid";
     NSMutableArray *resultArray = [NSMutableArray new];
     if (sqlite3_prepare_v2(smsDb, [querySQL UTF8String], -1, &statement, NULL) == SQLITE_OK) {
         while (sqlite3_step(statement) == SQLITE_ROW) {
-          NSString *guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
-          guid = [guid componentsSeparatedByString:@";"][2];
-          [resultArray addObject:guid];
+          SMSChat *chat = [SMSChat alloc];
+
+          chat.guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
+          chat.guid = [chat.guid componentsSeparatedByString:@";"][2];
+
+          chat.chatId = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+          [resultArray addObject:chat];
         }
         sqlite3_reset(statement);
     }
     return [resultArray copy];
 }
+
+\
 
 @end

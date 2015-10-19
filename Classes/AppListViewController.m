@@ -67,6 +67,11 @@
 			@"com.apple.SharedWebCredentialViewService",
 			@"com.apple.webapp",
 			@"com.apple.webapp1",
+      @"com.apple.ServerDocuments",
+      @"com.apple.social.SLYahooAuth",
+      @"com.apple.Diagnostics.Mitosis",
+      @"com.apple.SafariViewService",
+      @"com.apple.StoreDemoViewService",
 			nil];
 		self.hiddenDisplayIdentifiers = result;
 	}

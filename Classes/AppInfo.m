@@ -30,7 +30,19 @@
 
     self.version = [apps valueForKey:@"bundleVersion" forDisplayIdentifier:self.identifier];
 
+    [self loadExtraInfo];
+
     return self;
+  }
+
+  - (void)loadExtraInfo {
+    NSString *metaPath = [NSString stringWithFormat:@"/private/var/mobile/Containers/Bundle/Application/%@/%@", self.folder, @"iTunesMetadata.plist"];
+    NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithContentsOfFile:metaPath];
+
+    self.artist = [metadata objectForKey:@"artistName"];
+    self.purchaserAccount = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"accountInfo.AppleID"];
+    self.purchaseDate = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"purchaseDate"];
+    self.releaseDate = [metadata objectForKey:@"releaseDate"];
   }
 
   - (NSString*) description {

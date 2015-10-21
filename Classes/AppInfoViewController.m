@@ -3,12 +3,11 @@
 #import "MBProgressHUD.h"
 
 @implementation AppInfoViewController
-@synthesize identifier;
-@synthesize appName;
+@synthesize appInfo;
 @synthesize infoTable;
 
 -(void)viewDidLoad {
-  self.title = identifier;
+  self.title = self.appInfo.identifier;
 
   self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
   self.view.backgroundColor = [UIColor whiteColor];
@@ -24,9 +23,10 @@
   self.navigationItem.backBarButtonItem = newBackButton;
 
   self.appList = [ALApplicationList sharedApplicationList];
-  self.appName = [self.appList valueForKey:@"displayName" forDisplayIdentifier:self.identifier];
-  self.title = appName;
+  self.title = self.appInfo.name;
   [self.view addSubview:self.infoTable];
+
+  [self.appInfo loadExtraInfo];
 
   [self.infoTable reloadData];
 }
@@ -38,14 +38,14 @@
     return 2;
   } else if (section == 1) {
     return 4;
-  } else {
-    return 3;
+  } else if (section == 2) {
+    return 4;
   }
-
+  return 0;
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  return 2;
+  return 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -53,9 +53,10 @@
     return @"App Info";
   } else if (section == 1) {
     return @"Bundle";
-  } else {
-    return nil;
+  } else if (section == 2) {
+    return @"iTunes";
   }
+  return nil;
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
@@ -67,50 +68,47 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
   }
 
-  NSString *rawPath = [self valueForKey:@"path"];
-  NSString *appType;
-  NSString *bundle;
-  NSString *folder;
-
-  if ([rawPath hasPrefix:@"/Applications"]) {
-    appType = @"System";
-    folder = @"/Applications/";
-    bundle = [rawPath stringByReplacingOccurrencesOfString:@"/Applications/" withString:@""];
-  } else if ([rawPath hasPrefix:@"/private/"]) {
-    appType = @"iTunes";
-
-    NSArray *split = [rawPath componentsSeparatedByString:@"/"];
-    folder = [split objectAtIndex:[split count] - 2];
-    bundle = [split lastObject];
-  }
-
   if (indexPath.section == 0) {
 
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Name";
-      cell.detailTextLabel.text = self.appName;
+      cell.detailTextLabel.text = self.appInfo.name;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Identifier";
-      cell.detailTextLabel.text = self.identifier;
+      cell.detailTextLabel.text = self.appInfo.identifier;
     } else if (indexPath.row == 2) {
 
       cell.textLabel.text = @"Path";
-      cell.detailTextLabel.text = [self valueForKey:@"path"];
+      cell.detailTextLabel.text = self.appInfo.rawPath;
     }
 
   } else if (indexPath.section == 1) {
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Bundle";
-      cell.detailTextLabel.text = bundle;
+      cell.detailTextLabel.text = self.appInfo.bundle;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Version";
-      cell.detailTextLabel.text = [self valueForKey:@"bundleVersion"];
+      cell.detailTextLabel.text = self.appInfo.version;
     } else if (indexPath.row == 2) {
       cell.textLabel.text = @"Folder";
-      cell.detailTextLabel.text = folder;
+      cell.detailTextLabel.text = self.appInfo.folder;
     } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Type";
-      cell.detailTextLabel.text = appType;
+      cell.detailTextLabel.text = self.appInfo.type;
+    }
+  } else if (indexPath.section == 2) {
+    if (indexPath.row == 0) {
+      cell.textLabel.text = @"Developer";
+      cell.detailTextLabel.text = self.appInfo.artist;
+    } else if (indexPath.row == 1) {
+      cell.textLabel.text = @"Release Date";
+      cell.detailTextLabel.text = self.appInfo.releaseDate;
+    } else if (indexPath.row == 2) {
+      cell.textLabel.text = @"Purchase Date";
+      cell.detailTextLabel.text = self.appInfo.purchaseDate;
+    } else if (indexPath.row == 3) {
+      cell.textLabel.text = @"Purchaser";
+      cell.detailTextLabel.text = self.appInfo.purchaserAccount;
     }
   }
 
@@ -134,7 +132,7 @@
 }
 
 - (id)valueForKey:(NSString*)key {
-  return [self.appList valueForKey:key forDisplayIdentifier:self.identifier];
+  return [self.appList valueForKey:key forDisplayIdentifier:self.appInfo.identifier];
 }
 
 @end

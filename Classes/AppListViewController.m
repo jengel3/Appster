@@ -265,7 +265,7 @@
   }
 	
 	AppInfoViewController *appView = [[AppInfoViewController alloc] init];
-	appView.identifier = app.identifier;
+	appView.appInfo = app;
 
 	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
 

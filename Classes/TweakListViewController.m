@@ -39,6 +39,10 @@ float bestFit;
   self.definesPresentationContext = YES;
   [self.searchController.searchBar sizeToFit];
 
+  self.sources = [[NSArray alloc] init];
+
+  [self loadSourcesList];
+
 	UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
 		style:UIBarButtonItemStylePlain 
 		target:self
@@ -51,6 +55,34 @@ float bestFit;
 	[self generateTweakInfoList];
 
 	[self reload];
+}
+
+-(void)loadSourcesList {
+  NSString *sourcesDir = @"/etc/apt/sources.list.d";
+  NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
+  NSMutableArray *rawSources = [[NSMutableArray alloc] init];
+  [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *filename = (NSString *)obj;
+    NSString *extension = [[filename pathExtension] lowercaseString];
+    if ([extension isEqualToString:@"list"]) {
+      NSString *path = [sourcesDir stringByAppendingPathComponent:filename];
+      NSData* data = [NSData dataWithContentsOfFile:path];
+      NSString* string = [[NSString alloc] 
+        initWithBytes:[data bytes]
+        length:[data length] 
+        encoding:NSUTF8StringEncoding];
+
+      NSArray* lines = [string componentsSeparatedByString:@"\n"];
+      for (NSString *line in lines) {
+        if ([line hasPrefix:@"#"]) continue;
+        NSArray *pieces = [line componentsSeparatedByString:@" "];
+        NSString *url = pieces[1];
+        [rawSources addObject:url];
+      }
+    }
+  }];
+  NSLog(@"SOURCES %@", rawSources);
+  self.sources = [rawSources copy];
 }
 
 -(void) showActionSheet:(id) sender {
@@ -150,6 +182,11 @@ float bestFit;
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+  // if (self.searchController.active) {
+  //   return 1;
+  // } else {
+  //   return 2;
+  // }
   return 1;
 }
 
@@ -257,7 +294,6 @@ float bestFit;
   }
   NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K contains[c] %@", key, searchText];
   self.searchResults = [self.tweakData filteredArrayUsingPredicate:filter];
-  NSLog(@"THESE RESULTS %@", self.searchResults);
 }
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {

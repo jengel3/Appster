@@ -4,6 +4,7 @@
 #import "TweakInfo.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
+#import "MBProgressHUD.h"
 
 float bestFit;
 
@@ -299,9 +300,17 @@ float bestFit;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-  if (!self.searchController.active && indexPath.section == 0) return;
+  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+  if (!self.searchController.active && indexPath.section == 0) {
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = cell.textLabel.text;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Copied!";
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    hud.mode = MBProgressHUDModeCustomView;
+    return;
+  }
 
 	NSString *name = cell.textLabel.text;
 	NSString *pkg = cell.detailTextLabel.text;

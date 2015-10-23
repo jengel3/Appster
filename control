@@ -1,6 +1,6 @@
 Package: com.jake0oo0.appster
 Name: Appster
-Version: 0.0.3
+Version: 0.0.4
 Depends: firmware (>= 8.0), mobilesubstrate, applist
 Architecture: iphoneos-arm
 Description: Get important info for installed apps and tweaks

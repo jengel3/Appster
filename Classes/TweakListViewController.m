@@ -24,7 +24,7 @@ float bestFit;
 	self.title = @"Cydia Tweaks";
 	self.view.backgroundColor = [UIColor whiteColor];
 
-	self.tweakTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+	self.tweakTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	self.tweakTable.dataSource = self;
 	self.tweakTable.delegate = self;
 
@@ -38,8 +38,6 @@ float bestFit;
 
   self.definesPresentationContext = YES;
   [self.searchController.searchBar sizeToFit];
-
-  self.sources = [[NSArray alloc] init];
 
   [self loadSourcesList];
 
@@ -60,7 +58,6 @@ float bestFit;
 -(void)loadSourcesList {
   NSString *sourcesDir = @"/etc/apt/sources.list.d";
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
-  NSLog(@"FILES %@", files);
   NSMutableArray *rawSources = [[NSMutableArray alloc] init];
   [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
@@ -75,16 +72,13 @@ float bestFit;
 
       NSArray* lines = [string componentsSeparatedByString:@"\n"];
       for (NSString *line in lines) {
-        if ([line hasPrefix:@"#"]) continue;
+        if (!line || [line isEqualToString:@""] || [line hasPrefix:@"#"]) continue;
         NSArray *pieces = [line componentsSeparatedByString:@" "];
-        NSLog(@"PIECES %@", pieces);
         NSString *url = pieces[1];
         [rawSources addObject:url];
-        NSLog(@"URL %@", url);
       }
     }
   }];
-  NSLog(@"SOURCES %@", rawSources);
   self.sources = [rawSources copy];
 }
 
@@ -143,8 +137,17 @@ float bestFit;
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Cydia Tweaks Export - %@<br><br>", timestamp]];
 
+    [body appendString:@"<b>Sources:</b><br>"];
+
+    for (id source in self.sources) {
+      [body appendString:[NSString stringWithFormat:@"%@<br>", source]];  
+    }
+
+    [body appendString:@"<br><b>Packages:</b><br><br>"];
+
     if (mode == 0) {
     	for (TweakInfo* tweak in self.tweakData) {
+
     		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", tweak.package]];
     	
     		NSArray *keys = [tweak.rawData allKeys];
@@ -180,17 +183,30 @@ float bestFit;
   if (self.searchController.active) {
     return [self.searchResults count];
   } else {
-    return [self.tweakData count];
+    if (section == 0) {
+      return [self.sources count];
+    } else {
+      return [self.tweakData count];
+    }
   }
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+  if (self.searchController.active) return nil;
+  if (section == 0) {
+    return @"Sources";
+  } else if (section == 1) {
+    return @"Installed Tweaks";
+  }
+  return nil;
+}
+
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  // if (self.searchController.active) {
-  //   return 1;
-  // } else {
-  //   return 2;
-  // }
-  return 1; 
+  if (self.searchController.active) {
+    return 1;
+  } else {
+    return 2;
+  }
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
@@ -207,7 +223,24 @@ float bestFit;
   if (self.searchController.active) {
     tweak = (TweakInfo*)[self.searchResults objectAtIndex:indexPath.row];
   } else {
-    tweak = (TweakInfo*)[self.tweakData objectAtIndex:indexPath.row];
+    if (indexPath.section == 0) {
+      NSString *source = [self.sources objectAtIndex:indexPath.row];
+      cell.textLabel.text = source;
+      UIImage *img = [[UIImage alloc] initWithContentsOfFile:@"/Applications/Cydia.app/Sections/Repositories.png"];
+    
+      img = [Utilities imageWithImage:img scaledToWidth:img.size.width/4];
+      cell.imageView.image = img;
+      cell.detailTextLabel.text = nil;
+      cell.accessoryType = 0;
+    if (!bestFit) {
+      bestFit = img.size.width;
+    }
+
+    cell.imageView.image = img;
+      return cell;
+    } else if (indexPath.section == 1) {
+      tweak = (TweakInfo*)[self.tweakData objectAtIndex:indexPath.row];
+    }
   }
 
 	NSString *name = tweak.name;
@@ -221,7 +254,7 @@ float bestFit;
 
 	NSString *iconPath = [tweak.rawData objectForKey:@"Icon"];
 	NSString *section = tweak.section;
-	bool existed = false;
+	BOOL existed = false;
 
 	if (iconPath) {
 
@@ -265,6 +298,8 @@ float bestFit;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+  if (!self.searchController.active && indexPath.section == 0) return;
 
 	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 

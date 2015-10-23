@@ -60,6 +60,7 @@ float bestFit;
 -(void)loadSourcesList {
   NSString *sourcesDir = @"/etc/apt/sources.list.d";
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
+  NSLog(@"FILES %@", files);
   NSMutableArray *rawSources = [[NSMutableArray alloc] init];
   [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
@@ -76,8 +77,10 @@ float bestFit;
       for (NSString *line in lines) {
         if ([line hasPrefix:@"#"]) continue;
         NSArray *pieces = [line componentsSeparatedByString:@" "];
+        NSLog(@"PIECES %@", pieces);
         NSString *url = pieces[1];
         [rawSources addObject:url];
+        NSLog(@"URL %@", url);
       }
     }
   }];
@@ -187,7 +190,7 @@ float bestFit;
   // } else {
   //   return 2;
   // }
-  return 1;
+  return 1; 
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {

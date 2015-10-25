@@ -309,6 +309,7 @@ float bestFit;
     hud.labelText = @"Copied!";
     hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
     hud.mode = MBProgressHUDModeCustomView;
+    [hud hide:YES afterDelay:0.5];
     return;
   }
 

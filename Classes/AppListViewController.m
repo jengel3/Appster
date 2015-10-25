@@ -117,6 +117,11 @@
 	[self.view addSubview:self.appTable];
 
 	[self loadApps];
+
+  if ([self.appList count] == 0) {
+    // load again in case applist is being buggy
+    [self loadApps];
+  }
 }
 
 -(void)exportList:(int) mode {

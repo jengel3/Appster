@@ -19,4 +19,5 @@ include $(THEOS_MAKE_PATH)/application.mk
 
 after-install::
 	install.exec "killall -9 Appster"
+SUBPROJECTS += appstersettings
 include $(THEOS_MAKE_PATH)/aggregate.mk

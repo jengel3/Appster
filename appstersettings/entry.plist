@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = AppsterSettings;
+	cell = PSLinkCell;
+	detail = AppsterSettingsListController;
+	icon = AppsterSettings.png;
+	isController = 1;
+	label = AppsterSettings;
+    };
+}

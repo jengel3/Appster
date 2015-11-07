@@ -1,4 +1,5 @@
 #import "MessagesListViewController.h"
+#import "UIMessageTableViewCell.h"
 #import "SMSListViewController.h"
 #import <sqlite3.h> 
 #import "SMSChat.h"
@@ -79,33 +80,31 @@
 }
 
 - (NSMutableArray*) findChats {
-    NSString *path = @"/var/mobile/Library/SMS/sms.db";
-    sqlite3_stmt *statement;
+  NSString *path = @"/var/mobile/Library/SMS/sms.db";
+  sqlite3_stmt *statement;
 
-    sqlite3 *smsDb = nil;
+  sqlite3 *smsDb = nil;
 
-    if (!smsDb && sqlite3_open([path UTF8String], &smsDb) != SQLITE_OK) {
-        NSLog(@"Failed to open database");
-        return nil;
-    }
+  if (!smsDb && sqlite3_open([path UTF8String], &smsDb) != SQLITE_OK) {
+      NSLog(@"Failed to open database");
+      return nil;
+  }
 
-    NSString *querySQL = @"SELECT guid,rowid FROM chat ORDER BY guid";
-    NSMutableArray *resultArray = [NSMutableArray new];
-    if (sqlite3_prepare_v2(smsDb, [querySQL UTF8String], -1, &statement, NULL) == SQLITE_OK) {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-          SMSChat *chat = [SMSChat alloc];
+  NSString *querySQL = @"SELECT guid,rowid FROM chat ORDER BY guid";
+  NSMutableArray *resultArray = [NSMutableArray new];
+  if (sqlite3_prepare_v2(smsDb, [querySQL UTF8String], -1, &statement, NULL) == SQLITE_OK) {
+      while (sqlite3_step(statement) == SQLITE_ROW) {
+        SMSChat *chat = [SMSChat alloc];
 
-          chat.guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
-          chat.guid = [chat.guid componentsSeparatedByString:@";"][2];
+        chat.guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
+        chat.guid = [chat.guid componentsSeparatedByString:@";"][2];
 
-          chat.chatId = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
-          [resultArray addObject:chat];
-        }
-        sqlite3_reset(statement);
-    }
-    return [resultArray copy];
+        chat.chatId = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+        [resultArray addObject:chat];
+      }
+      sqlite3_reset(statement);
+  }
+  return [resultArray copy];
 }
-
-\
 
 @end

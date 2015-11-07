@@ -32,5 +32,5 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();    
     UIGraphicsEndImageContext();
     return newImage;
-}
+  }
 @end

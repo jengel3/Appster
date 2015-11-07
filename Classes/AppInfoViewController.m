@@ -1,6 +1,6 @@
 #import "AppInfoViewController.h"
 #import <AppList/AppList.h>
-#import "MBProgressHUD.h"
+#import "MBProgressHud/MBProgressHUD.h"
 
 @implementation AppInfoViewController
 @synthesize appInfo;
@@ -45,6 +45,7 @@
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+  if ([self.appInfo.type isEqualToString:@"System"]) return 2;
   return 3;
 }
 
@@ -121,6 +122,7 @@
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   if (!cell.detailTextLabel || !cell.detailTextLabel.text) return;
+  
   UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
   pasteboard.string = cell.detailTextLabel.text;
   MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

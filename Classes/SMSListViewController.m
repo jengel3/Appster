@@ -1,40 +1,94 @@
 #import "SMSListViewController.h"
+#import "UIMessageTableViewCell.h"
+#import <MessageUI/MessageUI.h> 
+#import <MessageUI/MFMailComposeViewController.h> 
 #import "SMSMessage.h"
 #import <sqlite3.h> 
+
+NSString *CellIdentifier = @"Cell";
 
 @implementation SMSListViewController
 
 - (void)viewDidLoad {
-    self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
-    self.view.backgroundColor = [UIColor whiteColor];
+  self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
+  self.view.backgroundColor = [UIColor whiteColor];
 
-    self.msgTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    self.msgTable.dataSource = self;
-    self.msgTable.delegate = self;
+  self.msgTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+  self.msgTable.dataSource = self;
+  self.msgTable.delegate = self;
+  
+  [self.msgTable registerClass:[UIMessageTableViewCell class] forCellReuseIdentifier:CellIdentifier];
+
+  self.msgTable.estimatedRowHeight = 44;
+  self.msgTable.rowHeight = UITableViewAutomaticDimension;
 
 
-    self.title = [NSString stringWithFormat:@"Chat: %@", self.chatId];
+  self.title = [NSString stringWithFormat:@"Chat: %@", self.chatId];
 
-    // self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+  UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+    target:self
+    action:@selector(exportMessages:)];
+  self.navigationItem.rightBarButtonItem = shareButton;
 
-    // self.activityIndicator.center=self.view.center;
-    // [self.activityIndicator startAnimating];
 
-    // [self.view addSubview:self.activityIndicator];
-    // 
-    [self.view addSubview:self.msgTable];
+  [self.view addSubview:self.msgTable];
 
-    self.messages = [self findMessages];
+  self.messages = [self findMessages];
+  self.messages = [[self.messages reverseObjectEnumerator] allObjects];
 
-    [self.msgTable reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-
-    [self.msgTable reloadData];  
+  [self.msgTable reloadData];  
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (void)exportMessages:(id)sender {
+  if ([MFMailComposeViewController canSendMail]) {
+    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+    mailCont.mailComposeDelegate = self;
+    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDate *now = [NSDate date];
+
+    NSDateFormatterStyle style = NSDateFormatterShortStyle;
+
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    NSString *timestamp = [formatter stringFromDate:now];
+
+    [mailCont setSubject:[NSString stringWithFormat:@"Appster Messages Export - %@", timestamp]];
+
+    style = NSDateFormatterMediumStyle;
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    timestamp = [formatter stringFromDate:now];
+
+    [mailCont setToRecipients:nil];
+
+    NSMutableString *body = [[NSMutableString alloc] init];
+    [body appendString:[NSString stringWithFormat:@"Appster Messages Export - %@ <br><br><br>", timestamp]];
+
+    style = NSDateFormatterShortStyle;
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    for (SMSMessage *msg in self.messages) {
+      [body appendString:[NSString stringWithFormat:@"<div style='color: %@;'>%@<br><div style='size: 50%%; color: black;'>&nbsp;-%@</div></div><br>", (msg.isFromMe ? @"blue" : @"gray"), msg.text, [formatter stringFromDate:msg.date]]];
+    }
+
+    [mailCont setMessageBody:body isHTML:YES];
+
+    [self presentViewController:mailCont animated:YES completion:nil];
+  }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+  [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
   return 1;
 }
-
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
   if (tableView != self.msgTable) return 0;
@@ -42,25 +96,36 @@
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
-  NSString *CellIdentifier = @"Cell";
 
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-
-  if (cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-  }
-
-  NSLog(@"CALLED");
+  UIMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   
   SMSMessage *msg = (SMSMessage*)[self.messages objectAtIndex:indexPath.row];
-  NSLog(@"ME? %d", msg.isFromMe);
+
+  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+
+  NSDateFormatterStyle style = NSDateFormatterShortStyle;
+  [formatter setTimeStyle:style];
+  [formatter setDateStyle:style];
+
+  NSString *timestamp = [formatter stringFromDate:msg.date];
+
+
+  cell.msgLabel.text = msg.text;
+  cell.timestampLabel.text = timestamp;
+
+
   if (msg.isFromMe) {
-    cell.textLabel.textAlignment = NSTextAlignmentRight;
+    [cell.msgLabel setTextAlignment:NSTextAlignmentRight];
+    [cell.timestampLabel setTextAlignment:NSTextAlignmentRight];
   } else {
-    cell.textLabel.textAlignment = NSTextAlignmentLeft;
+    [cell.msgLabel setTextAlignment:NSTextAlignmentLeft];
+    [cell.timestampLabel setTextAlignment:NSTextAlignmentLeft];
   }
-  cell.textLabel.numberOfLines = 0;
-  cell.textLabel.text = msg.text;
+
+  cell.timestampLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
+
+  [cell setNeedsUpdateConstraints];
+  [cell updateConstraintsIfNeeded];
 
   return cell;
 }
@@ -87,7 +152,8 @@
         while (sqlite3_step(statement) == SQLITE_ROW) {
           SMSMessage *msg = [SMSMessage alloc];
           msg.text = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
-          msg.date = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+          NSString *date = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+          msg.date = [NSDate dateWithTimeIntervalSinceReferenceDate:[date doubleValue]];
           msg.isFromMe = [[NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 2)] boolValue];
           [resultArray addObject:msg];
         }

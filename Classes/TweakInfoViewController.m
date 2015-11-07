@@ -2,7 +2,7 @@
 #import "Utilities.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
-#import "MBProgressHUD.h"
+#import "MBProgressHud/MBProgressHUD.h"
 #import "TweakInfo.h"
 #import "InstalledFilesViewController.h"
 
@@ -12,7 +12,7 @@
 @synthesize info;
 @synthesize infoTable;
 
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
   self.view.backgroundColor = [UIColor whiteColor];
 
@@ -30,7 +30,7 @@
 
 }
 
-- (void) showExport:(id)sender {
+- (void)showExport:(id)sender {
   if ([MFMailComposeViewController canSendMail]) {
     MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
     mailCont.mailComposeDelegate = self;

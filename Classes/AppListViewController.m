@@ -172,11 +172,10 @@
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-    [self dismissViewControllerAnimated:YES completion:nil];
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-
-- (void) showActionSheet:(id)sender {
+- (void)showActionSheet:(id)sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
 	  message:nil
 	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -202,7 +201,7 @@
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
+- (NSInteger)tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
 	if (tableView != self.appTable) return 0;
   if (self.searchController.active) {
     return [self.searchResults count];
@@ -215,7 +214,7 @@
   return 0;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger)numberOfSectionsInTableView: (UITableView * ) tableView {
   if (self.searchController.active) {
     return 1;
   }
@@ -232,7 +231,7 @@
   return nil;
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell * )tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath * )indexPath {
 	static NSString *CellIdentifier = @"Cell";
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

@@ -4,7 +4,7 @@
 #import "TweakInfo.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
-#import "MBProgressHUD.h"
+#import "MBProgressHud/MBProgressHUD.h"
 
 float bestFit;
 

@@ -26,9 +26,57 @@
   self.chatTable.dataSource = self;
   self.chatTable.delegate = self;
 
+  UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+    target:self
+    action:@selector(exportDatabase:)];
+  self.navigationItem.rightBarButtonItem = shareButton;
+
   [self.view addSubview:self.chatTable];
 
   [self loadData];
+}
+
+- (void)exportDatabase:(id)sender {
+  if ([MFMailComposeViewController canSendMail]) {
+    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+    mailCont.mailComposeDelegate = self;
+    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDate *now = [NSDate date];
+
+    NSDateFormatterStyle style = NSDateFormatterShortStyle;
+
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    NSString *timestamp = [formatter stringFromDate:now];
+
+    [mailCont setSubject:[NSString stringWithFormat:@"Appster Messages Database Export - %@", timestamp]];
+
+    style = NSDateFormatterMediumStyle;
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    timestamp = [formatter stringFromDate:now];
+
+    [mailCont setToRecipients:nil];
+
+    NSMutableString *body = [[NSMutableString alloc] init];
+    [body appendString:[NSString stringWithFormat:@"Appster Messages Database Export - %@ <br><br><br>", timestamp]];
+    [body appendString:@"Message database is attached to email."];
+
+    NSData *dbData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SMS/sms.db"];
+    [mailCont addAttachmentData:dbData mimeType:@"application/x-sqlite3" fileName:@"sms.db"];
+
+    [mailCont setMessageBody:body isHTML:YES];
+
+    [self presentViewController:mailCont animated:YES completion:nil];
+  }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void) loadData {
@@ -39,7 +87,6 @@
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
   return 1;
 }
-
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
   if (tableView != self.chatTable) return 0;

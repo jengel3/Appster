@@ -1,9 +1,10 @@
 Package: com.jake0oo0.appster
 Name: Appster
-Version: 0.0.6
+Version: 0.0.7
 Depends: firmware (>= 8.0), mobilesubstrate, applist
 Architecture: iphoneos-arm
-Description: Get important info for installed apps and tweaks
+Description: View and export info and content from your iDevice
+Depiction: https://cydia.jakes.site/depictions/?p=com.jake0oo0.appster
 Maintainer: Jake0oo0 <jake0oo0dev@gmail.com>
 Author: Jake0oo0 <jake0oo0dev@gmail.com>
 Section: Utilities

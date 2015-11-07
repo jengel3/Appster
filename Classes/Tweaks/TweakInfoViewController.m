@@ -1,8 +1,8 @@
 #import "TweakInfoViewController.h"
-#import "Utilities.h"
+#import "../Utilities.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
-#import "MBProgressHud/MBProgressHUD.h"
+#import "../MBProgressHud/MBProgressHUD.h"
 #import "TweakInfo.h"
 #import "InstalledFilesViewController.h"
 
@@ -110,8 +110,12 @@
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
-  if ((indexPath.section == 0 || indexPath.section == 1) && cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+  if (!cell) {
+    if (indexPath.section <= 1) {
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    } else {
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
   }
 
   cell.imageView.image = nil;
@@ -148,9 +152,6 @@
       cell.detailTextLabel.text = self.info.architecture;
     }
   } else if (indexPath.section == 2) {
-    if (cell == nil) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-    }
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Installed Files";
       cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
@@ -215,13 +216,10 @@
 
 -(void)sendEmail:(int)user {
   if ([MFMailComposeViewController canSendMail]) {
-    NSString *recipName;
     NSString *recip;
     if (user == 0) {
-      recipName = self.info.author;
       recip = self.info.authorEmail;
     } else if (user == 1) {
-      recipName = self.info.maintainer;
       recip = self.info.maintainerEmail;
     }
 
@@ -229,17 +227,8 @@
     mailCont.mailComposeDelegate = self;
     mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *now = [NSDate date];
 
-    NSDateFormatterStyle style = NSDateFormatterShortStyle;
-
-    [formatter setTimeStyle:style];
-    [formatter setDateStyle:style];
-
-    NSString *timestamp = [formatter stringFromDate:now];
-
-    [mailCont setSubject:[NSString stringWithFormat:@"%@ Contact %@ - %@", (user == 0 ? @"Author" : @"Maintainer"), recipName, timestamp]];
+    [mailCont setSubject:[NSString stringWithFormat:@"Cydia: %@ (%@)", self.info.name, self.info.version]];
 
     [mailCont setToRecipients:[NSArray arrayWithObjects:recip, nil]];
 

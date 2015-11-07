@@ -1,5 +1,5 @@
 #import "AppleExportHubViewController.h"
-#import "MessagesListViewController.h"
+#import "Messages/MessagesListViewController.h"
 
 @implementation AppleExportHubViewController
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {

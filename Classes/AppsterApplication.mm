@@ -1,7 +1,7 @@
-#import "AppListViewController.h"
-#import "TweakListViewController.h"
+#import "Applications/AppListViewController.h"
+#import "Tweaks/TweakListViewController.h"
 #import "AppleExportHubViewController.h"
-#import "InstalledFilesViewController.h"
+#import "Tweaks/InstalledFilesViewController.h"
 
 @interface AppsterApplication: UIApplication <UIApplicationDelegate> {
 	UIWindow *_window;

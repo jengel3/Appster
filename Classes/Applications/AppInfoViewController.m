@@ -1,6 +1,6 @@
 #import "AppInfoViewController.h"
 #import <AppList/AppList.h>
-#import "MBProgressHud/MBProgressHUD.h"
+#import "../MBProgressHud/MBProgressHUD.h"
 
 @implementation AppInfoViewController
 @synthesize appInfo;

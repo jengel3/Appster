@@ -1,10 +1,10 @@
 #import "TweakListViewController.h"
 #import "TweakInfoViewController.h"
-#import "Utilities.h"
+#import "../Utilities.h"
 #import "TweakInfo.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
-#import "MBProgressHud/MBProgressHUD.h"
+#import "../MBProgressHud/MBProgressHUD.h"
 
 float bestFit;
 

@@ -2,6 +2,7 @@
 #import "UIMessageTableViewCell.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
+#import "../MBProgressHud/MBProgressHUD.h"
 #import "SMSMessage.h"
 #import <sqlite3.h> 
 
@@ -132,6 +133,18 @@ NSString *CellIdentifier = @"Cell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+  UIMessageTableViewCell *cell = (UIMessageTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+  if (!cell.msgLabel || !cell.msgLabel.text) return;
+  
+  UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+  pasteboard.string = cell.msgLabel.text;
+  MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  hud.labelText = @"Copied!";
+  hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+  hud.mode = MBProgressHUDModeCustomView;
+
+  [hud hide:YES afterDelay:0.5];
 }
 
 - (NSMutableArray*) findMessages {

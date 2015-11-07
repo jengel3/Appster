@@ -1,5 +1,5 @@
 #import "TweakInfo.h"
-#import "Utilities.h"
+#import "../Utilities.h"
 
 @implementation TweakInfo
   @synthesize package;

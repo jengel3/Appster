@@ -7,7 +7,6 @@
 @interface SMSListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
   @property (nonatomic, retain) UITableView *msgTable;
   @property (nonatomic, strong) UIMessageTableViewCell *prototypeCell;
-  @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 
   @property (nonatomic, retain) NSArray *messages;
   @property (nonatomic, retain) NSString *chatId;

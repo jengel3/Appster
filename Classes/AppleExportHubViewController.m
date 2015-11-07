@@ -1,5 +1,6 @@
 #import "AppleExportHubViewController.h"
 #import "Messages/MessagesListViewController.h"
+#import "Notes/NotesListViewController.h"
 
 @implementation AppleExportHubViewController
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -67,17 +68,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+  UIViewController *controller;
 
   if (indexPath.row == 0) {
-    MessagesListViewController *msgsView = [[MessagesListViewController alloc] init];
-    UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-
-    [(UINavigationController*)tabBarController.selectedViewController pushViewController:msgsView animated:YES];
+    controller = [[MessagesListViewController alloc] init];
   } else if (indexPath.row == 1) {
   } else if (indexPath.row == 2) {
   } else if (indexPath.row == 3) {
   } else if (indexPath.row == 4) {
   } else if (indexPath.row == 5) {
+    controller = [[NotesListViewController alloc] init];
+  }
+
+  if (controller) {
+    UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+
+    [(UINavigationController*)tabBarController.selectedViewController pushViewController:controller animated:YES];
   }
 }
 @end

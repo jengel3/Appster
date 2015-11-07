@@ -6,7 +6,7 @@
 #import "SMSMessage.h"
 #import <sqlite3.h> 
 
-NSString *CellIdentifier = @"Cell";
+static NSString *CellIdentifier = @"Cell";
 
 @implementation SMSListViewController
 

@@ -1,6 +1,6 @@
 Package: com.jake0oo0.appster
 Name: Appster
-Version: 0.0.7
+Version: 0.0.8
 Depends: firmware (>= 8.0), mobilesubstrate, applist
 Architecture: iphoneos-arm
 Description: View and export info and content from your iDevice

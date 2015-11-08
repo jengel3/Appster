@@ -30,77 +30,83 @@
 @end
 
 @implementation DevelopersListCell
--(BOOL) showHeartImage {
+-(BOOL)showHeartImage {
   return NO;
 }
--(void) openJakeTwitter
-{
-    [SKSharedHelper openTwitter:@"itsjake88"];
+
+-(void)openJakeTwitter {
+  [SKSharedHelper openTwitter:@"itsjake88"];
 }
--(void) openAOkTwitter
-{
-    [SKSharedHelper openTwitter:@"AOkhtenberg"];
+
+-(void)openAOkTwitter {
+  [SKSharedHelper openTwitter:@"AOkhtenberg"];
 }
--(NSArray*) customSpecifiers
-{
-    return @[
-     @{
-        @"cell": @"PSLinkCell",
-        @"cellClass": @"DeveloperCell",
-        @"height": @100,
-        @"action": @"openJakeTwitter"
-      },
-     @{
-        @"cell": @"PSLinkCell",
-        @"cellClass": @"DesignerCell",
-        @"height": @100,
-        @"action": @"openAOkTwitter"
-      }
-     ];
+
+-(NSArray*)customSpecifiers {
+  return @[
+   @{
+      @"cell": @"PSLinkCell",
+      @"cellClass": @"DeveloperCell",
+      @"height": @100,
+      @"action": @"openJakeTwitter"
+    },
+   @{
+      @"cell": @"PSLinkCell",
+      @"cellClass": @"DesignerCell",
+      @"height": @100,
+      @"action": @"openAOkTwitter"
+    }
+   ];
 }
 @end
 
 @implementation AppsterSettingsListController
+-(UIColor*)tintColor { 
+  return [UIColor colorWithRed:0.19 green:0.56 blue:0.84 alpha:1.0]; 
+}
+-(BOOL)tintNavigationTitleText { 
+  return YES; 
+}
 
--(UIColor*) tintColor { return [UIColor colorWithRed:0.19 green:0.56 blue:0.84 alpha:1.0]; }
--(BOOL) tintNavigationTitleText { return YES; }
-
--(NSString*) shareMessage {
+-(NSString*)shareMessage {
     return @"I'm using Appster by @itsjake88 to export content from my iDevice. Check it out!";
 }
 
--(NSString*) headerText { return @"Appster"; }
--(NSString*) headerSubText {
+-(NSString*)headerText { 
+  return @"Appster"; 
+}
+
+-(NSString*)headerSubText {
   return @"View and Export Device Data";
 }
 
--(NSString*) customTitle { return @"Appster"; }
--(NSArray*) customSpecifiers
-{
-    return @[
-             @{
-                 @"cell": @"PSGroupCell",
-                 @"label": @"Appster Settings"
-                 },
-             @{
-                 @"cell": @"PSSwitchCell",
-                 @"default": @YES,
-                 @"defaults": @"com.jake0oo0.appstersettings",
-                 @"key": @"enabled",
-                 @"label": @"Enabled",
-                 @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
-                 @"cellClass": @"SKTintedSwitchCell"
-                 },
-             @{
-                 @"cell": @"PSGroupCell",
-                 @"label": @"Developers"
-                 },
-              @{
-                   @"cell": @"PSLinkCell",
-                   @"cellClass": @"SKTintedCell",
-                   @"detail": @"DevelopersListCell",
-                   @"label": @"Developers"
-                   },
-               ];
+-(NSString*)customTitle { 
+  return @"Appster"; 
+}
+-(NSArray*) customSpecifiers {
+  return @[
+    @{
+      @"cell": @"PSGroupCell",
+      @"label": @"Appster Settings"
+    },
+    @{
+      @"cell": @"PSEditTextCell",
+      @"default": @"",
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"default_email",
+      @"label": @"Default Email",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged"
+    },
+    @{
+      @"cell": @"PSGroupCell",
+      @"label": @"Developers"
+    },
+    @{
+      @"cell": @"PSLinkCell",
+      @"cellClass": @"SKTintedCell",
+      @"detail": @"DevelopersListCell",
+      @"label": @"Developers"
+    },
+  ];
 }
 @end

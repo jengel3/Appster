@@ -191,7 +191,7 @@ static NSString *CellIdentifier = @"Cell";
         note.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
         NSString *rawBody = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
 
-        note.body = [[NSAttributedString alloc] initWithData:[rawBody dataUsingEncoding:NSUTF8StringEncoding]  options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType} documentAttributes:nil error:nil];
+        note.body = [[NSAttributedString alloc] initWithData:[rawBody dataUsingEncoding:NSUTF16StringEncoding]  options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType} documentAttributes:nil error:nil];
 
         NSString *creationDate = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 4)];
         NSString *updateDate = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 5)];

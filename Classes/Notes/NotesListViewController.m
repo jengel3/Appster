@@ -188,8 +188,8 @@ static NSString *CellIdentifier = @"Cell";
         } else {
           note.author = nil;
         }
-        note.title = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 2)];
-        NSString *rawBody = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 3)];
+        note.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 2)];
+        NSString *rawBody = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 3)];
 
         note.body = [[NSAttributedString alloc] initWithData:[rawBody dataUsingEncoding:NSUTF8StringEncoding]  options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType} documentAttributes:nil error:nil];
 

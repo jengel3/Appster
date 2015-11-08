@@ -40,6 +40,7 @@
     NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithContentsOfFile:metaPath];
 
     self.artist = [metadata objectForKey:@"artistName"];
+    self.pk = [metadata objectForKey:@"itemId"];
     self.purchaserAccount = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"accountInfo.AppleID"];
     self.purchaseDate = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"purchaseDate"];
     self.releaseDate = [metadata objectForKey:@"releaseDate"];
@@ -47,5 +48,13 @@
 
   - (NSString*) description {
     return self.name; 
+  }
+
+  - (BOOL)isiTunes {
+    return [self.type isEqualToString:@"iTunes"];
+  }
+
+  - (BOOL)isSystem {
+    return [self.type isEqualToString:@"System"];
   }
 @end

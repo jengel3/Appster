@@ -22,7 +22,7 @@
 -(NSString*)personDescription { return @"Lead Designer"; }
 -(NSString*)name { return @"AOkhtenberg"; }
 -(NSString*)twitterHandle { return @"AOkhtenberg"; }
--(NSString*)imageName { return @"aokhtenberg@2x.png"; }
+-(NSString*)imageName { return @"AOkhtenberg@2x.png"; }
 @end
 
 

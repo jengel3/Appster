@@ -39,14 +39,27 @@
   } else if (section == 1) {
     return 4;
   } else if (section == 2) {
-    return 4;
+    if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+      return 4;
+    }
+    if ([self.appInfo isSystem]) {
+      return 1;
+    } else {
+      return 2;
+    }
+  } else if (section == 3) {
+    if ([self.appInfo isSystem]) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
   return 0;
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  if ([self.appInfo.type isEqualToString:@"System"]) return 2;
-  return 3;
+  if ([self.appInfo.type isEqualToString:@"System"]) return 3;
+  return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -55,7 +68,13 @@
   } else if (section == 1) {
     return @"Bundle";
   } else if (section == 2) {
-    return @"iTunes";
+    if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+      return @"iTunes";
+    } else {
+      return @"Actions";
+    }
+  } else if (section == 3) {
+    return @"Actions";
   }
   return nil;
 }
@@ -68,6 +87,8 @@
   if (cell == nil) {
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
   }
+
+  cell.imageView.image = nil;
 
   if (indexPath.section == 0) {
 
@@ -97,7 +118,7 @@
       cell.textLabel.text = @"Type";
       cell.detailTextLabel.text = self.appInfo.type;
     }
-  } else if (indexPath.section == 2) {
+  } else if (indexPath.section == 2 && [self.appInfo.type isEqualToString:@"iTunes"]) {
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Developer";
       cell.detailTextLabel.text = self.appInfo.artist;
@@ -111,6 +132,16 @@
       cell.textLabel.text = @"Purchaser";
       cell.detailTextLabel.text = self.appInfo.purchaserAccount;
     }
+  } else if (indexPath.section == 2 || indexPath.section == 3) {
+    if (indexPath.row == 0) {
+      cell.textLabel.text = @"Open in iFile";
+      cell.detailTextLabel.text = nil;
+      cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
+    } else if (indexPath.row == 1) {
+      cell.textLabel.text = @"Open in iTunes";
+      cell.detailTextLabel.text = nil;
+      cell.imageView.image = [UIImage imageNamed:@"AppStore.png"];
+    }
   }
 
   cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
@@ -120,8 +151,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+  if (([self.appInfo.type isEqualToString: @"iTunes"] && indexPath.section == 3) || (indexPath.section == 2 && [self.appInfo.type isEqualToString:@"System"])) {
+    if (indexPath.row == 0) {
+      NSString *fileURL = [self.appInfo.rawPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+      NSString *iFile = [NSString stringWithFormat:@"ifile://%@", fileURL];
+      if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:iFile]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iFile]];
+      }
+    } else if (indexPath.row == 1) {
+      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", self.appInfo.pk]]];
+    }
+    return;
+  }
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   if (!cell.detailTextLabel || !cell.detailTextLabel.text) return;
+
+
   
   UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
   pasteboard.string = cell.detailTextLabel.text;

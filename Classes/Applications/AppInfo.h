@@ -2,6 +2,7 @@
 
 @interface AppInfo : NSObject
   @property (nonatomic, retain) NSString *name;
+  @property (nonatomic, retain) NSString *pk;
   @property (nonatomic, retain) NSString *identifier;
   @property (nonatomic, retain) NSString *type;
   @property (nonatomic, retain) NSString *bundle;
@@ -16,4 +17,6 @@
 
   - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps;
   - (void)loadExtraInfo;
+  - (BOOL)isiTunes;
+  - (BOOL)isSystem;
 @end

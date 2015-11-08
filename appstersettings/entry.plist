@@ -3,8 +3,8 @@
 	bundle = AppsterSettings;
 	cell = PSLinkCell;
 	detail = AppsterSettingsListController;
-	icon = AppsterSettings.png;
+	icon = Appster.png;
 	isController = 1;
-	label = AppsterSettings;
+	label = Appster;
     };
 }

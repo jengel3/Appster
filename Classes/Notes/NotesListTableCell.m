@@ -51,8 +51,8 @@
 
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
       [self.bodyLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
-    }];
-    [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
+    }]; 
+   [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
     [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
 
     //

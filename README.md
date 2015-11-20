@@ -6,6 +6,7 @@ Appster is a work-in-progress replacement for the now-defunct Cydia application,
 * Export installed applications
 * Export installed Cydia tweaks & extensions
 * Export and view a list of SMS and iMessages via email
+* Export and view notes saved on your device
 
 ## Building
 * Appster is built using [theos](https://github.com/DHowett/theos)

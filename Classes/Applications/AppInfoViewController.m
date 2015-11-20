@@ -35,7 +35,7 @@
   if (tableView != self.infoTable) return 0;
 
   if (section == 0) {
-    return 2;
+    return 3;
   } else if (section == 1) {
     return 4;
   } else if (section == 2) {
@@ -99,7 +99,9 @@
       cell.textLabel.text = @"Identifier";
       cell.detailTextLabel.text = self.appInfo.identifier;
     } else if (indexPath.row == 2) {
-
+      cell.textLabel.text = @"Version";
+      cell.detailTextLabel.text = self.appInfo.version ? self.appInfo.version : @"n/a";
+    } else if (indexPath.row == 3) {
       cell.textLabel.text = @"Path";
       cell.detailTextLabel.text = self.appInfo.rawPath;
     }
@@ -110,7 +112,7 @@
       cell.detailTextLabel.text = self.appInfo.bundle;
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Version";
-      cell.detailTextLabel.text = self.appInfo.version;
+      cell.detailTextLabel.text = self.appInfo.bundleVersion;
     } else if (indexPath.row == 2) {
       cell.textLabel.text = @"Folder";
       cell.detailTextLabel.text = self.appInfo.folder;
@@ -118,7 +120,7 @@
       cell.textLabel.text = @"Type";
       cell.detailTextLabel.text = self.appInfo.type;
     }
-  } else if (indexPath.section == 2 && [self.appInfo.type isEqualToString:@"iTunes"]) {
+  } else if (indexPath.section == 2 && [self.appInfo isiTunes]) {
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Developer";
       cell.detailTextLabel.text = self.appInfo.artist;

@@ -28,7 +28,7 @@
       self.bundle = [split lastObject];
     }
 
-    self.version = [apps valueForKey:@"bundleVersion" forDisplayIdentifier:self.identifier];
+    self.bundleVersion = [apps valueForKey:@"bundleVersion" forDisplayIdentifier:self.identifier];
 
     [self loadExtraInfo];
 
@@ -44,6 +44,7 @@
     self.purchaserAccount = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"accountInfo.AppleID"];
     self.purchaseDate = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"purchaseDate"];
     self.releaseDate = [metadata objectForKey:@"releaseDate"];
+    self.version = [metadata objectForKey:@"bundleShortVersionString"];
   }
 
   - (NSString*) description {

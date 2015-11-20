@@ -91,11 +91,11 @@
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.view.backgroundColor = [UIColor whiteColor];
 
-	UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
+	UIBarButtonItem *actionsButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
 		style:UIBarButtonItemStylePlain 
 		target:self
 		action:@selector(showActionSheet:)];          
-  self.navigationItem.rightBarButtonItem = anotherButton;
+  self.navigationItem.rightBarButtonItem = actionsButton;
 
 	self.appTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	self.appTable.dataSource = self;
@@ -108,6 +108,8 @@
   self.searchController.searchBar.delegate = self;
 
   self.appTable.tableHeaderView = self.searchController.searchBar;
+
+  self.appTable.contentOffset = CGPointMake(0, self.searchController.searchBar.frame.size.height);
 
   self.definesPresentationContext = YES;
   [self.searchController.searchBar sizeToFit];
@@ -133,7 +135,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     NSDate *now = [NSDate date];
 
-	  NSDateFormatterStyle style = NSDateFormatterLongStyle;
+	  NSDateFormatterStyle style = NSDateFormatterShortStyle;
 
 	  [formatter setTimeStyle:style];
 	  [formatter setDateStyle:style];
@@ -154,13 +156,17 @@
     [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
 
     if (mode == 0) {
-    	for (AppInfo* app in self.appList) {
-    		[body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", app.name]];
-    		[body appendString:[NSString stringWithFormat:@"  Version: %@", app.version]];
+    	for (AppInfo* app in self.mobileApps) {
+    		[body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, app.version]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Identifier:</i> %@<br>", app.identifier]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>App ID:</i> %@<br>", app.pk]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Developer:</i> %@<br>", app.artist]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchase Date:</i> %@<br>", app.purchaseDate]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchaser:</i> %@<br>", app.purchaserAccount]];
     		[body appendString:@"<br><br>"];
     	}
     } else if (mode == 1) {
-    	for (AppInfo* app in self.appList) {
+    	for (AppInfo* app in self.mobileApps) {
     		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, app.version]];
     	}
     }

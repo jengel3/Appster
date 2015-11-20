@@ -165,8 +165,6 @@ static NSString *CellIdentifier = @"Cell";
         while (sqlite3_step(statement) == SQLITE_ROW) {
           SMSMessage *msg = [SMSMessage alloc];
           msg.text = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
-
-          NSLog(@"TEXT: %@", msg.text);
           NSString *date = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
           msg.date = [NSDate dateWithTimeIntervalSinceReferenceDate:[date doubleValue]];
           msg.isFromMe = [[NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 2)] boolValue];

@@ -13,7 +13,7 @@
 -(NSString*)personDescription { return @"Lead Developer"; }
 -(NSString*)name { return @"Jake0oo0"; }
 -(NSString*)twitterHandle { return @"itsjake88"; }
--(NSString*)imageName { return @"jake@2x.png"; }
+-(NSString*)imageName { return @"Jake0oo0@2x.png"; }
 @end
 
 @interface DesignerCell : SKPersonCell

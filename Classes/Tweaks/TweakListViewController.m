@@ -37,16 +37,25 @@ float bestFit;
 
   self.tweakTable.tableHeaderView = self.searchController.searchBar;
 
+  self.tweakTable.contentOffset = CGPointMake(0, self.searchController.searchBar.frame.size.height);
+
   self.definesPresentationContext = YES;
   [self.searchController.searchBar sizeToFit];
 
   [self loadSourcesList];
 
-	UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
+	UIBarButtonItem *actionsButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
 		style:UIBarButtonItemStylePlain 
 		target:self
 		action:@selector(showActionSheet:)];          
-  self.navigationItem.rightBarButtonItem = anotherButton;
+  self.navigationItem.rightBarButtonItem = actionsButton;
+
+  UIBarButtonItem *sortButton = [[UIBarButtonItem alloc] initWithTitle:@"Sort" 
+    style:UIBarButtonItemStylePlain 
+    target:self
+    action:@selector(showSortMenu:)];          
+  self.navigationItem.leftBarButtonItem = sortButton;
+
 
 	[self.view addSubview:self.tweakTable];
 
@@ -54,6 +63,63 @@ float bestFit;
 	[self generateTweakInfoList];
 
 	[self reload];
+}
+
+-(void)showSortMenu:(id)sender {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
+    message:nil
+    preferredStyle:UIAlertControllerStyleActionSheet];
+
+  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+    handler:^(UIAlertAction * action) {
+      [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+
+  UIAlertAction* alphaAscending = [UIAlertAction actionWithTitle:@"Alpha (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:1];
+    }];
+
+  UIAlertAction* alphaDescending = [UIAlertAction actionWithTitle:@"Alpha (Z-A)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:2];
+    }];
+
+  UIAlertAction* author = [UIAlertAction actionWithTitle:@"Developer (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:3];
+    }];
+
+  UIAlertAction* package = [UIAlertAction actionWithTitle:@"Package (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:4];
+    }];
+
+  [alert addAction:cancelAction];
+  [alert addAction:alphaAscending];
+  [alert addAction:alphaDescending];
+  [alert addAction:author];
+  [alert addAction:package];
+  [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)sortContent:(int)sort {
+  NSString *key;
+  BOOL asc = YES;
+  if (sort == 1) {
+    key = @"name";
+  } else if (sort == 2) {
+    key = @"name";
+    asc = NO;
+  } else if (sort == 3) {
+    key = @"author";
+  } else if (sort == 4) {
+    key = @"package";
+  }
+  NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:key ascending:asc];
+  self.tweakData = [[self.tweakData sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
+
+  [self.tweakTable reloadData]; 
 }
 
 -(void)loadSourcesList {
@@ -118,7 +184,7 @@ float bestFit;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     NSDate *now = [NSDate date];
 
-	  NSDateFormatterStyle style = NSDateFormatterLongStyle;
+	  NSDateFormatterStyle style = NSDateFormatterShortStyle;
 
 	  [formatter setTimeStyle:style];
 	  [formatter setDateStyle:style];

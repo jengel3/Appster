@@ -8,6 +8,7 @@
   @property (nonatomic, retain) NSString *bundle;
   @property (nonatomic, retain) NSString *rawPath;
   @property (nonatomic, retain) NSString *folder;
+  @property (nonatomic, retain) NSString *bundleVersion;
   @property (nonatomic, retain) NSString *version;
   @property (nonatomic, retain) NSString *artist;
   @property (nonatomic, retain) NSString *purchaserAccount;

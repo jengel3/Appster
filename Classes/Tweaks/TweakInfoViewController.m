@@ -227,7 +227,6 @@
     mailCont.mailComposeDelegate = self;
     mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
 
-
     [mailCont setSubject:[NSString stringWithFormat:@"Cydia: %@ (%@)", self.info.name, self.info.version]];
 
     [mailCont setToRecipients:[NSArray arrayWithObjects:recip, nil]];

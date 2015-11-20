@@ -42,4 +42,20 @@
 	[self.window makeKeyAndVisible];
 }
 
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [self applicationDidFinishLaunching:application];
+
+  return YES;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+	if ([[url host] isEqualToString:@"tweaks"]) {
+		[self.tabBarController setSelectedIndex:1];
+	} else if ([[url host] isEqualToString:@"apps"]) {
+		[self.tabBarController setSelectedIndex:0];
+	}
+
+	return YES;
+}
+
 @end

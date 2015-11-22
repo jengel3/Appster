@@ -32,7 +32,6 @@ static void loadPrefs() {
   NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:valuesPath];
   hiddenUpdates = nil;
   hiddenUpdates = [settings objectForKey:@"hidden_updates"];
-  NSLog(@"CONTENT %@", [settings objectForKey:@"default_email"]);
   if (!hiddenUpdates) {
     hiddenUpdates = [[NSArray alloc] init];
   }

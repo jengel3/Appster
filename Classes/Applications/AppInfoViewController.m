@@ -240,7 +240,13 @@
     }
   } else if (indexPath.section == 2 || indexPath.section == 3) {
     if (indexPath.row == 0) {
-      cell.textLabel.text = @"Open in iFile";
+      AppsterSettings *settings = [[AppsterSettings alloc] init];
+      int editor = [[settings valueForKey:@"file_explorer" orDefault:@1] intValue];
+      if (editor == 1) {
+        cell.textLabel.text = @"Open in iFile";
+      } else if (editor == 2) {
+        cell.textLabel.text = @"Open in Filza";
+      }
       cell.detailTextLabel.text = nil;
       cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
     } else if (indexPath.row == 1) {
@@ -260,10 +266,16 @@
 
   if (([self.appInfo.type isEqualToString: @"iTunes"] && indexPath.section == 3) || (indexPath.section == 2 && [self.appInfo.type isEqualToString:@"System"])) {
     if (indexPath.row == 0) {
+      UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
       NSString *fileURL = [self.appInfo.rawPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-      NSString *iFile = [NSString stringWithFormat:@"ifile://%@", fileURL];
-      if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:iFile]]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iFile]];
+      NSString *appURL;
+      if ([cell.textLabel.text isEqualToString:@"Open in iFile"]) {
+        appURL = [NSString stringWithFormat:@"ifile://%@", fileURL];
+      } else if ([cell.textLabel.text isEqualToString:@"Open in Filza"]) {
+        appURL = [NSString stringWithFormat:@"filza://%@", fileURL];
+      }
+      if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:appURL]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appURL]];
       }
     } else if (indexPath.row == 1) {
       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/app/id%@", self.appInfo.pk]]];

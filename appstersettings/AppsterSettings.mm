@@ -71,7 +71,7 @@
 }
 
 -(NSString*)shareMessage {
-    return @"I'm using Appster by @itsjake88 to export content from my iDevice. Check it out!";
+    return @"I'm using #Appster by @itsjake88 to export content from my iDevice. Check it out!";
 }
 
 -(NSString*)headerText { 
@@ -107,6 +107,23 @@
       @"label": @"Export System Apps",
       @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
       @"cellClass": @"SKTintedSwitchCell"
+    },
+    @{
+      @"cell": @"PSLinkListCell",
+      @"default": @1,
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"file_explorer",
+      @"label": @"File Exploring App",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
+      @"validTitles": @[
+        @"iFile",
+        @"Filza"
+      ],
+      @"validValues": @[
+        @1,
+        @2
+      ],
+      @"detail": @"PSListItemsController"
     },
     @{
       @"cell": @"PSGroupCell",

@@ -91,7 +91,7 @@
   } else if (section == 1) {
     return 5;
   } else if (section == 2) {
-    return 4;
+    return 5;
   }
   return 0;
 }
@@ -183,6 +183,10 @@
       cell.textLabel.text = @"Open Depiction";
       cell.detailTextLabel.text = self.depiction;
       cell.imageView.image = [UIImage imageNamed:@"Safari.png"];
+    } else if (indexPath.row == 4) {
+      cell.textLabel.text = @"Open in Cydia";
+      cell.detailTextLabel.text = nil;
+      cell.imageView.image = [UIImage imageNamed:@"CydiaLogo.png"];
     }
   }
 
@@ -218,6 +222,9 @@
       [webViewController.view addSubview: webView];
 
       [self.navigationController pushViewController:webViewController animated:YES];
+    } else if (indexPath.row == 4) {
+      NSURL *myURL = [NSURL URLWithString:[NSString stringWithFormat:@"cydia://package/%@", self.package]];
+      [[UIApplication sharedApplication] openURL:myURL];
     }
   } else {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];

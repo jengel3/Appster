@@ -2,7 +2,7 @@
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "TweakInfo.h"
 
-@interface TweakInfoViewController : UIViewController  <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
+@interface TweakInfoViewController : UIViewController  <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UIWebViewDelegate>
   @property (nonatomic, retain) NSString *package;
   @property (nonatomic, retain) NSString *name;
 

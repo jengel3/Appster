@@ -8,7 +8,7 @@ include theos/makefiles/common.mk
 
 APPLICATION_NAME = Appster
 Appster_FILES = main.m $(wildcard Classes/**/*.m) $(wildcard Classes/*.m) $(wildcard Classes/*.mm)
-Appster_FRAMEWORKS = UIKit CoreGraphics MessageUI
+Appster_FRAMEWORKS = UIKit CoreGraphics MessageUI SafariServices
 Appster_PRIVATE_FRAMEWORKS = ChatKit
 Appster_LDFLAGS = -lsqlite3 -all_load -ObjC
 Appster_LIBRARIES = applist

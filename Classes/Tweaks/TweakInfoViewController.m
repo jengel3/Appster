@@ -17,10 +17,10 @@
   self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
   self.view.backgroundColor = [UIColor whiteColor];
 
-  UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc] initWithTitle:@"Export" 
+  UIBarButtonItem *exportBtn = [[UIBarButtonItem alloc] initWithTitle:@"Export"
     style:UIBarButtonItemStylePlain 
     target:self
-    action:@selector(showExport:)];          
+    action:@selector(showExport:)];
   self.navigationItem.rightBarButtonItem = exportBtn;
 
   self.infoTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
@@ -28,7 +28,6 @@
   self.infoTable.delegate = self;
 
   [self.view addSubview:self.infoTable];
-
 }
 
 - (void)showExport:(id)sender {
@@ -92,8 +91,7 @@
   } else if (section == 1) {
     return 5;
   } else if (section == 2) {
-    if (self.depiction) return 4;
-    return 3;
+    return 4;
   }
   return 0;
 }
@@ -206,7 +204,20 @@
     } else if (indexPath.row == 2) {
       [self sendEmail:1];
     } else if (indexPath.row == 3) {
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.depiction]];
+      NSString *depic = self.depiction;
+      if (!depic) {
+        depic = [NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", self.package];
+      }
+
+      UIViewController *webViewController = [[UIViewController alloc] init];
+
+      UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+      webView.delegate = self;
+      [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:depic]]];
+
+      [webViewController.view addSubview: webView];
+
+      [self.navigationController pushViewController:webViewController animated:YES];
     }
   } else {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -220,6 +231,20 @@
   
     [hud hide:YES afterDelay:0.5];
   }
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+  [self.navigationController popViewControllerAnimated:YES];
+
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Request Failed"
+   message:@"Appster failed to load the depiction. The page may not exist."
+   preferredStyle:UIAlertControllerStyleAlert];
+ 
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+     handler:nil];
+   
+  [alert addAction:defaultAction];
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)sendEmail:(int)user {

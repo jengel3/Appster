@@ -15,6 +15,7 @@ NSArray *hiddenUpdates;
     if (update.updateState == 0) {
       count++;
       if ([hiddenUpdates containsObject:update.bundleIdentifier]) {
+        count--;
         [original removeObject:update];
       }
     }

@@ -17,6 +17,16 @@
   self.infoTable.dataSource = self;
   self.infoTable.delegate = self;
 
+  UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
+  UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
+  UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 30, self.view.bounds.size.width - 90 - 20, 30)];
+  headerLabel.text = self.appInfo.name;
+  headerLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+  [headerView addSubview:headerLabel];
+  [imageView setImage:self.appInfo.icon];
+  [headerView addSubview:imageView];
+  self.infoTable.tableHeaderView = headerView;
+
   UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:@"Apps" 
     style:UIBarButtonItemStylePlain
     target:nil 

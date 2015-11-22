@@ -287,6 +287,7 @@
   }
 	
 	AppInfoViewController *appView = [[AppInfoViewController alloc] init];
+  app.icon = [self.applications iconOfSize:ALApplicationIconSizeLarge forDisplayIdentifier:app.identifier];
 	appView.appInfo = app;
 
 	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;

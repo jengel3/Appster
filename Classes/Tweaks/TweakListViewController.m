@@ -307,11 +307,11 @@ float bestFit;
       cell.imageView.image = img;
       cell.detailTextLabel.text = nil;
       cell.accessoryType = 0;
-    if (!bestFit) {
-      bestFit = img.size.width;
-    }
+      if (!bestFit) {
+        bestFit = img.size.width;
+      }
 
-    cell.imageView.image = img;
+      cell.imageView.image = img;
       return cell;
     } else if (indexPath.section == 1) {
       tweak = (TweakInfo*)[self.tweakData objectAtIndex:indexPath.row];

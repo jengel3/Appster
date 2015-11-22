@@ -14,6 +14,7 @@
   @property (nonatomic, retain) NSString *purchaserAccount;
   @property (nonatomic, retain) NSString *purchaseDate;
   @property (nonatomic, retain) NSString *releaseDate;
+  @property (nonatomic, retain) UIImage *icon;
   @property (nonatomic, retain) ALApplicationList *appList;
 
   - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps;

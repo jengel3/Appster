@@ -8,6 +8,7 @@
   @synthesize rawPath;
   @synthesize folder;
   @synthesize version;
+  @synthesize icon;
 
   - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps {
     self.identifier = ident;

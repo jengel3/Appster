@@ -4,6 +4,7 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "NotesListTableCell.h"
+#import "../Settings.h"
 
 static NSString *CellIdentifier = @"Cell";
 
@@ -84,7 +85,13 @@ static NSString *CellIdentifier = @"Cell";
     [formatter setDateStyle:style];
 
     NSString *timestamp = [formatter stringFromDate:now];
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
     NSMutableString *body = [[NSMutableString alloc] init];
 
 

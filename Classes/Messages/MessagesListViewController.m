@@ -3,6 +3,7 @@
 #import "SMSListViewController.h"
 #import <sqlite3.h> 
 #import "SMSChat.h"
+#import "../Settings.h"
 
 @implementation MessagesListViewController
 @synthesize chatTable;
@@ -60,7 +61,13 @@
 
     timestamp = [formatter stringFromDate:now];
 
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
 
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Appster Messages Database Export - %@ <br><br><br>", timestamp]];

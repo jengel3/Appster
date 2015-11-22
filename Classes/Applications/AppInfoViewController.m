@@ -1,6 +1,7 @@
 #import "AppInfoViewController.h"
 #import <AppList/AppList.h>
 #import "../MBProgressHud/MBProgressHUD.h"
+#import "../Settings.h"
 
 @implementation AppInfoViewController
 @synthesize appInfo;
@@ -22,6 +23,12 @@
     action:nil];
   self.navigationItem.backBarButtonItem = newBackButton;
 
+  UIBarButtonItem *actionsButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
+    style:UIBarButtonItemStylePlain 
+    target:self
+    action:@selector(showActionSheet:)];          
+  self.navigationItem.rightBarButtonItem = actionsButton;
+
   self.appList = [ALApplicationList sharedApplicationList];
   self.title = self.appInfo.name;
   [self.view addSubview:self.infoTable];
@@ -29,6 +36,103 @@
   [self.appInfo loadExtraInfo];
 
   [self.infoTable reloadData];
+}
+
+-(void) showActionSheet:(id) sender {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
+    message:nil
+    preferredStyle:UIAlertControllerStyleActionSheet];
+
+  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+    handler:^(UIAlertAction * action) {
+      [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+
+  UIAlertAction *hideUpdates;
+  if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSMutableArray *current = [settings valueForKey:@"hidden_updates"];
+    if (!current) current = [[NSMutableArray alloc] init];
+
+    if ([current containsObject:self.appInfo.identifier]) {
+      hideUpdates = [UIAlertAction actionWithTitle:@"Show App Store Updates" style:UIAlertActionStyleDefault
+        handler:^(UIAlertAction * action) {
+          [current removeObject:self.appInfo.identifier];
+          [settings setValue:current forKey:@"hidden_updates"];
+        }];
+    } else {
+      hideUpdates = [UIAlertAction actionWithTitle:@"Hide App Store Updates" style:UIAlertActionStyleDefault
+        handler:^(UIAlertAction * action) {
+          [current addObject:self.appInfo.identifier];
+          [settings setValue:current forKey:@"hidden_updates"];
+        }];
+    }
+  }
+
+  UIAlertAction *exportApp = [UIAlertAction actionWithTitle:@"Export Application" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self exportApp];
+    }];
+
+  [alert addAction:cancelAction];
+  if (hideUpdates) [alert addAction:hideUpdates];
+  [alert addAction:exportApp];
+
+  [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)exportApp {
+  if ([MFMailComposeViewController canSendMail]) {
+    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
+    mailCont.mailComposeDelegate = self;
+    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDate *now = [NSDate date];
+
+    NSDateFormatterStyle style = NSDateFormatterShortStyle;
+
+    [formatter setTimeStyle:style];
+    [formatter setDateStyle:style];
+
+    NSString *timestamp = [formatter stringFromDate:now];
+
+    [mailCont setSubject:[NSString stringWithFormat:@"iTunes Application Export - %@", timestamp]];
+
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
+
+    NSMutableString *body = [[NSMutableString alloc] init];
+    [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
+
+    AppInfo *app = self.appInfo;
+    if ([app.type isEqualToString:@"iTunes"]) {
+      [body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, app.version]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;App ID: %@<br>", app.pk]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Developer: %@<br>", app.artist]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchase Date: %@<br>", app.purchaseDate]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchaser: %@<br>", app.purchaserAccount]];
+    } else {
+      [body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", app.name]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Bundle Version: %@<br>", app.bundleVersion]];
+    }
+    [body appendString:@"<br><br>"];
+
+    [mailCont setMessageBody:body isHTML:YES];
+
+    [self presentViewController:mailCont animated:YES completion:nil];
+  }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {

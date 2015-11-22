@@ -5,6 +5,7 @@
 #import "../MBProgressHud/MBProgressHUD.h"
 #import "SMSMessage.h"
 #import <sqlite3.h> 
+#import "../Settings.h"
 
 static NSString *CellIdentifier = @"Cell";
 
@@ -64,7 +65,13 @@ static NSString *CellIdentifier = @"Cell";
 
     timestamp = [formatter stringFromDate:now];
 
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
 
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Appster Messages Export - %@ <br><br><br>", timestamp]];

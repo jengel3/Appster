@@ -5,6 +5,7 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "../MBProgressHud/MBProgressHUD.h"
+#import "../Settings.h"
 
 float bestFit;
 
@@ -199,7 +200,14 @@ float bestFit;
 
   	timestamp = [formatter stringFromDate:now];
 
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
+
 
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Cydia Tweaks Export - %@<br><br>", timestamp]];

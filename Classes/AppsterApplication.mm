@@ -2,6 +2,9 @@
 #import "Tweaks/TweakListViewController.h"
 #import "AppleExportHubViewController.h"
 #import "Tweaks/InstalledFilesViewController.h"
+#import <UIKit/UIKit.h>
+#import <notify.h>
+
 
 @interface AppsterApplication: UIApplication <UIApplicationDelegate> {
 	UIWindow *_window;
@@ -9,6 +12,10 @@
 }
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) UITabBarController *tabBarController;
+@end
+
+@interface UIApplicationShortcutItem
+	@property (nonatomic, strong) NSString *type;
 @end
 
 @implementation AppsterApplication
@@ -31,7 +38,6 @@
 	AppleExportHubViewController *exportHub = [[AppleExportHubViewController alloc] init];
 	UINavigationController *exportNav = [[UINavigationController alloc] initWithRootViewController:exportHub];
 	exportNav.tabBarItem.image = [UIImage imageNamed:@"Apple@3x.png"];
-
 
 	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, nil];
 	self.tabBarController.viewControllers = controllers;
@@ -58,4 +64,13 @@
 	return YES;
 }
 
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+  if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-tweaks"]) {
+    [self.tabBarController setSelectedIndex:1];
+  } else if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-apps"]) {
+  	[self.tabBarController setSelectedIndex:2];
+  } else if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-content"]) {
+  	[self.tabBarController setSelectedIndex:3];
+  }
+}
 @end

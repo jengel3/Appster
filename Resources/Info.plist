@@ -36,6 +36,33 @@
             </array>
         </dict>
     </array>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+	    <dict>
+	        <key>UIApplicationShortcutItemIconType</key>
+	        <string>UIApplicationShortcutIconTypeAdd</string>
+	        <key>UIApplicationShortcutItemTitle</key>
+	        <string>Cydia Tweaks</string>
+	        <key>UIApplicationShortcutItemType</key>
+	        <string>com.jake0oo0.appster.open-tweaks</string>
+	    </dict>
+	    <dict>
+	        <key>UIApplicationShortcutItemIconType</key>
+	        <string>UIApplicationShortcutIconTypeAdd</string>
+	        <key>UIApplicationShortcutItemTitle</key>
+	        <string>Applications</string>
+	        <key>UIApplicationShortcutItemType</key>
+	        <string>com.jake0oo0.appster.open-apps</string>
+	    </dict>
+	    <dict>
+	        <key>UIApplicationShortcutItemIconType</key>
+	        <string>UIApplicationShortcutIconTypeAdd</string>
+	        <key>UIApplicationShortcutItemTitle</key>
+	        <string>Device Content</string>
+	        <key>UIApplicationShortcutItemType</key>
+	        <string>com.jake0oo0.appster.open-content</string>
+	    </dict>
+	</array>
 	<key>UILaunchImages</key>
 	<array>
 		<dict>

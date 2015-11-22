@@ -4,6 +4,8 @@
 #import <SettingsKit/SKPersonCell.h>
 #import <SettingsKit/SKSharedHelper.h>
 
+#define valuesPath @"/User/Library/Preferences/com.jake0oo0.appster.plist"
+
 @interface AppsterSettingsListController: SKTintedListController <SKListControllerProtocol>
 @end
 
@@ -62,7 +64,7 @@
 
 @implementation AppsterSettingsListController
 -(UIColor*)tintColor { 
-  return [UIColor colorWithRed:0.19 green:0.56 blue:0.84 alpha:1.0]; 
+  return [UIColor colorWithRed:0.19 green:0.56 blue:0.84 alpha:1.0]; // instagram color
 }
 -(BOOL)tintNavigationTitleText { 
   return YES; 
@@ -98,6 +100,15 @@
       @"PostNotification": @"com.jake0oo0.appster/settingsChanged"
     },
     @{
+      @"cell": @"PSSwitchCell",
+      @"default": @NO,
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"export_system",
+      @"label": @"Export System Apps",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
+      @"cellClass": @"SKTintedSwitchCell"
+    },
+    @{
       @"cell": @"PSGroupCell",
       @"label": @"Developers"
     },
@@ -109,4 +120,23 @@
     },
   ];
 }
+
+// http://iphonedevwiki.net/index.php/PreferenceBundles
+-(id) readPreferenceValue:(PSSpecifier*)specifier {
+  NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:valuesPath];
+  if (!settings[specifier.properties[@"key"]]) {
+    return specifier.properties[@"default"];
+  }
+  return settings[specifier.properties[@"key"]];
+}
+ 
+-(void) setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
+  NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
+  [defaults addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:valuesPath]];
+  [defaults setObject:value forKey:specifier.properties[@"key"]];
+  [defaults writeToFile:valuesPath atomically:NO];
+  CFStringRef toPost = (__bridge CFStringRef)specifier.properties[@"PostNotification"];
+  if (toPost) CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), toPost, NULL, NULL, YES);
+}
+// end
 @end

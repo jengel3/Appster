@@ -5,6 +5,7 @@
 #import "../MBProgressHud/MBProgressHUD.h"
 #import "TweakInfo.h"
 #import "InstalledFilesViewController.h"
+#import "../Settings.h"
 
 @implementation TweakInfoViewController
 @synthesize package;
@@ -54,7 +55,14 @@
 
     timestamp = [formatter stringFromDate:now];
 
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
+
 
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"Cydia Tweak Export - %@ <br><br>", timestamp]];

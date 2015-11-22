@@ -4,6 +4,7 @@
 #import "AppInfoViewController.h"
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
+#import "../Settings.h"
 
 @implementation AppListViewController
 @synthesize appList;
@@ -144,30 +145,41 @@
 
     [mailCont setSubject:[NSString stringWithFormat:@"iTunes Application Export - %@", timestamp]];
 
-    style = NSDateFormatterMediumStyle;
-    [formatter setTimeStyle:style];
-	  [formatter setDateStyle:style];
-
-  	timestamp = [formatter stringFromDate:now];
-
-    [mailCont setToRecipients:nil];
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+    NSString *defaultEmail = [settings valueForKey:@"default_email"];
+    if (defaultEmail) {
+      [mailCont setToRecipients:@[defaultEmail]];
+    } else {
+      [mailCont setToRecipients:nil];
+    }
 
     NSMutableString *body = [[NSMutableString alloc] init];
     [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
+    NSArray *apps;
+
+    BOOL exportSystem = [[settings valueForKey:@"export_system" orDefault:false] boolValue];
+
+    if (exportSystem) {
+      apps = self.appList;
+    } else {
+      apps = self.mobileApps;
+    }
 
     if (mode == 0) {
-    	for (AppInfo* app in self.mobileApps) {
-    		[body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, app.version]];
+    	for (AppInfo* app in apps) {
+    		[body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, (app.version ? app.version : app.bundleVersion)]];
         [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Identifier:</i> %@<br>", app.identifier]];
-        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>App ID:</i> %@<br>", app.pk]];
-        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Developer:</i> %@<br>", app.artist]];
-        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchase Date:</i> %@<br>", app.purchaseDate]];
-        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchaser:</i> %@<br>", app.purchaserAccount]];
+        if (![app isSystem]) {
+          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>App ID:</i> %@<br>", app.pk]];
+          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Developer:</i> %@<br>", app.artist]];
+          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchase Date:</i> %@<br>", app.purchaseDate]];
+          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchaser:</i> %@<br>", app.purchaserAccount]];
+        }
     		[body appendString:@"<br><br>"];
     	}
     } else if (mode == 1) {
-    	for (AppInfo* app in self.mobileApps) {
-    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, app.version]];
+    	for (AppInfo* app in apps) {
+    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, (app.version ? app.version : app.bundleVersion)]];
     	}
     }
 

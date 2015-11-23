@@ -68,9 +68,9 @@
   if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-tweaks"]) {
     [self.tabBarController setSelectedIndex:1];
   } else if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-apps"]) {
-  	[self.tabBarController setSelectedIndex:2];
+  	[self.tabBarController setSelectedIndex:0];
   } else if ([shortcutItem.type isEqualToString:@"com.jake0oo0.appster.open-content"]) {
-  	[self.tabBarController setSelectedIndex:3];
+  	[self.tabBarController setSelectedIndex:2];
   }
 }
 @end

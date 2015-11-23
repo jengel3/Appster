@@ -98,6 +98,12 @@
 		action:@selector(showActionSheet:)];          
   self.navigationItem.rightBarButtonItem = actionsButton;
 
+  UIBarButtonItem *sortButton = [[UIBarButtonItem alloc] initWithTitle:@"Sort" 
+    style:UIBarButtonItemStylePlain 
+    target:self
+    action:@selector(showSortMenu:)];          
+  self.navigationItem.leftBarButtonItem = sortButton;
+
 	self.appTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	self.appTable.dataSource = self;
 	self.appTable.delegate = self;
@@ -125,6 +131,68 @@
     // load again in case applist is being buggy
     [self loadApps];
   }
+}
+
+-(void)showSortMenu:(id)sender {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
+    message:nil
+    preferredStyle:UIAlertControllerStyleActionSheet];
+
+  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+    handler:^(UIAlertAction * action) {
+      [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+
+  UIAlertAction* alphaAscending = [UIAlertAction actionWithTitle:@"Alpha (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:1];
+    }];
+
+  UIAlertAction* alphaDescending = [UIAlertAction actionWithTitle:@"Alpha (Z-A)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:2];
+    }];
+
+  UIAlertAction* developer = [UIAlertAction actionWithTitle:@"Developer (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:3];
+    }];
+
+  UIAlertAction* identifier = [UIAlertAction actionWithTitle:@"Identifier (A-Z)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self sortContent:4];
+    }];
+
+  [alert addAction:cancelAction];
+  [alert addAction:alphaAscending];
+  [alert addAction:alphaDescending];
+  [alert addAction:developer];
+  [alert addAction:identifier];
+  [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)sortContent:(int)sort {
+  NSString *key;
+  BOOL asc = YES;
+  if (sort == 1) {
+    key = @"name";
+  } else if (sort == 2) {
+    key = @"name";
+    asc = NO;
+  } else if (sort == 3) {
+    key = @"artist";
+  } else if (sort == 4) {
+    key = @"identifier";
+  }
+  NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]
+    initWithKey:key
+    ascending:asc
+    selector:@selector(localizedCaseInsensitiveCompare:)];
+  self.mobileApps = [[self.mobileApps sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
+  self.systemApps = [[self.systemApps sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
+  self.appList = [[self.appList sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
+
+  [self.appTable reloadData]; 
 }
 
 -(void)exportList:(int) mode {

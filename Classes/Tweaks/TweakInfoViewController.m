@@ -27,15 +27,21 @@
   self.infoTable.dataSource = self;
   self.infoTable.delegate = self;
 
-  // UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
-  // UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
-  // UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 30, self.view.bounds.size.width - 90 - 20, 30)];
-  // headerLabel.text = self.appInfo.name;
-  // headerLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-  // [headerView addSubview:headerLabel];
-  // [imageView setImage:self.appInfo.icon];
-  // [headerView addSubview:imageView];
-  // self.infoTable.tableHeaderView = headerView;
+  UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
+  UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
+  UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 7, self.view.bounds.size.width - 90 - 20, 30)];
+  UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 20, self.view.bounds.size.width - 90 - 20, 50)];
+  headerLabel.text = self.info.name;
+  headerLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+  descLabel.text = self.info.description;
+  descLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+  descLabel.lineBreakMode = NSLineBreakByWordWrapping;
+  descLabel.numberOfLines = 2;
+  [headerView addSubview:headerLabel];
+  [headerView addSubview:descLabel];
+  [imageView setImage:[self.info getIcon:60]];
+  [headerView addSubview:imageView];
+  self.infoTable.tableHeaderView = headerView;
 
   [self.view addSubview:self.infoTable];
 }

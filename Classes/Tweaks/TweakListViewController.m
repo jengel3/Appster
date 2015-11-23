@@ -327,44 +327,12 @@ float bestFit;
 		cell.detailTextLabel.text = tweak.package;
 	}
 
-	NSString *iconPath = [tweak.rawData objectForKey:@"Icon"];
-	NSString *section = tweak.section;
-	BOOL existed = false;
+	UIImage *icon = [tweak getIcon:bestFit];
 
-	if (iconPath) {
-
-		if ([iconPath hasPrefix:@"file://"]) {
-			iconPath = [iconPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-		}
-		existed = [[NSFileManager defaultManager] fileExistsAtPath:iconPath];
-		if (existed) {
-			UIImage *img = [[UIImage alloc] initWithContentsOfFile:iconPath];
-			if (bestFit && img.size.width > bestFit) {
-				img = [Utilities imageWithImage:img scaledToWidth:bestFit];
-			}
-			cell.imageView.image = img;
-			existed = true;
-		}
-	} 
-	if (!existed) {
-		if (!section) {
-			section = @"Addons";
-		}
-		iconPath = [NSString stringWithFormat:@"/Applications/Cydia.app/Sections/%@.png", section];
-		existed = [[NSFileManager defaultManager] fileExistsAtPath:iconPath];
-		if (!existed) {
-			section = @"Addons";
-		}
-		iconPath = [NSString stringWithFormat:@"/Applications/Cydia.app/Sections/%@", section];
-		UIImage *img = [[UIImage alloc] initWithContentsOfFile:iconPath];
-		
-		img = [Utilities imageWithImage:img scaledToWidth:img.size.width/4];
-		if (!bestFit) {
-			bestFit = img.size.width;
-		}
-
-		cell.imageView.image = img;
-	}
+  if (!bestFit && icon) {
+    bestFit = icon.size.width;
+  }
+  cell.imageView.image = icon;
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 

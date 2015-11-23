@@ -60,4 +60,42 @@
     }
     return nil;
   }
+
+  -(UIImage*)getIcon:(float)bestFit {
+    NSString *iconPath = [self.rawData objectForKey:@"Icon"];
+    NSString *tempSec = self.section;
+    BOOL existed = false;
+
+    if (iconPath) {
+
+      if ([iconPath hasPrefix:@"file://"]) {
+        iconPath = [iconPath stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+      }
+      existed = [[NSFileManager defaultManager] fileExistsAtPath:iconPath];
+      if (existed) {
+        UIImage *img = [[UIImage alloc] initWithContentsOfFile:iconPath];
+        if (bestFit && img.size.width > bestFit) {
+          img = [Utilities imageWithImage:img scaledToWidth:bestFit];
+        }
+        return img;
+      }
+    } 
+    
+    if (!tempSec) {
+      tempSec = @"Addons";
+    }
+    iconPath = [NSString stringWithFormat:@"/Applications/Cydia.app/Sections/%@.png", tempSec];
+    existed = [[NSFileManager defaultManager] fileExistsAtPath:iconPath];
+    if (!existed) {
+      tempSec = @"Addons";
+    }
+    iconPath = [NSString stringWithFormat:@"/Applications/Cydia.app/Sections/%@", tempSec];
+    UIImage *img = [[UIImage alloc] initWithContentsOfFile:iconPath];
+    
+    img = [Utilities imageWithImage:img scaledToWidth:img.size.width/4];
+
+    return img;
+
+
+  }
 @end

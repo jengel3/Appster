@@ -17,4 +17,5 @@
 
   -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap;
   +(id)tweakForProperty:(NSString*)prop withValue:(NSString*)val andData:(NSMutableArray*)data;
+  -(UIImage*)getIcon:(float)bestFit;
 @end

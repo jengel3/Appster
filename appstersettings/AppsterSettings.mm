@@ -100,15 +100,6 @@
       @"PostNotification": @"com.jake0oo0.appster/settingsChanged"
     },
     @{
-      @"cell": @"PSSwitchCell",
-      @"default": @NO,
-      @"defaults": @"com.jake0oo0.appstersettings",
-      @"key": @"export_system",
-      @"label": @"Export System Apps",
-      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
-      @"cellClass": @"SKTintedSwitchCell"
-    },
-    @{
       @"cell": @"PSLinkListCell",
       @"default": @1,
       @"defaults": @"com.jake0oo0.appstersettings",
@@ -122,6 +113,65 @@
       @"validValues": @[
         @1,
         @2
+      ],
+      @"detail": @"PSListItemsController"
+    },
+    @{
+      @"cell": @"PSGroupCell",
+      @"label": @"Applications"
+    },
+    @{
+      @"cell": @"PSSwitchCell",
+      @"default": @NO,
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"export_system",
+      @"label": @"Export System Apps",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
+      @"cellClass": @"SKTintedSwitchCell"
+    },
+    @{
+      @"cell": @"PSLinkListCell",
+      @"default": @"alpha_asc",
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"apps_default_sort",
+      @"label": @"Default Sort",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
+      @"validTitles": @[
+        @"Alpha (A-Z)",
+        @"Alpha (Z-A)",
+        @"Developer (A-Z)",
+        @"Identifier (A-Z)"
+      ],
+      @"validValues": @[
+        @"alpha_asc",
+        @"alpha_desc",
+        @"developer_asc",
+        @"identifier_asc"
+      ],
+      @"detail": @"PSListItemsController"
+    },
+    @{
+      @"cell": @"PSGroupCell",
+      @"label": @"Cydia Tweaks"
+    },
+    @{
+      @"cell": @"PSLinkListCell",
+      @"default": @"alpha_asc",
+      @"defaults": @"com.jake0oo0.appstersettings",
+      @"key": @"tweaks_default_sort",
+      @"label": @"Default Sort",
+      @"PostNotification": @"com.jake0oo0.appster/settingsChanged",
+      @"validTitles": @[
+        @"Alpha (A-Z)",
+        @"Alpha (Z-A)",
+        @"Developer (A-Z)",
+        @"Package (A-Z)"
+      ],
+      @"validValues": @[
+        @"alpha_asc",
+        @"alpha_desc",
+        @"developer_asc",
+        @"identifier_asc"
       ],
       @"detail": @"PSListItemsController"
     },

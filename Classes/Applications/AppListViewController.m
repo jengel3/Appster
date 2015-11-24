@@ -5,6 +5,7 @@
 #import <MessageUI/MessageUI.h> 
 #import <MessageUI/MFMailComposeViewController.h> 
 #import "../Settings.h"
+#import "../Utilities.h"
 
 @implementation AppListViewController
 @synthesize appList;
@@ -183,7 +184,9 @@
     key = @"artist";
   } else if (sort == 4) {
     key = @"identifier";
+
   }
+  NSLog(@"THINGS, %@ -- %@", key, self.mobileApps);
   NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]
     initWithKey:key
     ascending:asc
@@ -410,13 +413,18 @@
   self.mobileApps = [[NSMutableArray alloc] init];
 
   for (AppInfo* app in self.appList) {
-    if ([app.type isEqualToString:@"System"]) {
+    if ([app isSystem]) {
       [self.systemApps addObject:app];
     } else {
       [self.mobileApps addObject:app];
     }
   }
 
-	[self.appTable reloadData];
+
+  AppsterSettings *settings = [[AppsterSettings alloc] init];
+
+  NSString *sortKey = [settings valueForKey:@"apps_default_sort" orDefault:@"alpha_asc"];
+  int intKey = [Utilities sortForKey:sortKey];
+  [self sortContent:intKey];
 }
 @end

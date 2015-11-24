@@ -453,9 +453,13 @@ float bestFit;
 		}
 
     NSPredicate *filter = [NSPredicate predicateWithFormat:@"installed == 1"];
-    NSArray *sorting = [self.tweakData filteredArrayUsingPredicate:filter];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    self.tweakData = [[sorting sortedArrayUsingDescriptors:@[descriptor]] mutableCopy];
+    self.tweakData = [[self.tweakData filteredArrayUsingPredicate:filter] mutableCopy];
+
+    AppsterSettings *settings = [[AppsterSettings alloc] init];
+
+    NSString *sortKey = [settings valueForKey:@"tweaks_default_sort" orDefault:@"alpha_asc"];
+    int intKey = [Utilities sortForKey:sortKey];
+    [self sortContent:intKey];
 
 		self.tweakList = [response allKeys];
 	}

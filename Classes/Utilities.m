@@ -33,4 +33,17 @@
     UIGraphicsEndImageContext();
     return newImage;
   }
+
+  +(int)sortForKey:(NSString*)key {
+    if ([key isEqualToString:@"alpha_asc"]) {
+      return 1;
+    } else if ([key isEqualToString:@"alpha_desc"]) {
+      return 2;
+    } else if ([key isEqualToString:@"developer_asc"]) {
+      return 3;
+    } else if ([key isEqualToString:@"identifier_asc"]) {
+      return 4;
+    }
+    return 1;
+  }
 @end

@@ -38,6 +38,16 @@
     </array>
     <key>UIApplicationShortcutItems</key>
     <array>
+    	<dict>
+	        <key>UIApplicationShortcutItemIconType</key>
+	        <string>UIApplicationShortcutIconTypeAdd</string>
+	        <key>UIApplicationShortcutItemTitle</key>
+	        <string>Applications</string>
+	        <key>UIApplicationShortcutItemType</key>
+	        <string>com.jake0oo0.appster.open-apps</string>
+	        <key>UIApplicationShortcutItemIconFile</key>
+	        <string>Shortcut-Applications</string>
+	    </dict>
 	    <dict>
 	        <key>UIApplicationShortcutItemIconType</key>
 	        <string>UIApplicationShortcutIconTypeAdd</string>
@@ -45,14 +55,8 @@
 	        <string>Cydia Tweaks</string>
 	        <key>UIApplicationShortcutItemType</key>
 	        <string>com.jake0oo0.appster.open-tweaks</string>
-	    </dict>
-	    <dict>
-	        <key>UIApplicationShortcutItemIconType</key>
-	        <string>UIApplicationShortcutIconTypeAdd</string>
-	        <key>UIApplicationShortcutItemTitle</key>
-	        <string>Applications</string>
-	        <key>UIApplicationShortcutItemType</key>
-	        <string>com.jake0oo0.appster.open-apps</string>
+	        <key>UIApplicationShortcutItemIconFile</key>
+	        <string>Shortcut-Tweaks</string>
 	    </dict>
 	    <dict>
 	        <key>UIApplicationShortcutItemIconType</key>
@@ -61,6 +65,8 @@
 	        <string>Device Content</string>
 	        <key>UIApplicationShortcutItemType</key>
 	        <string>com.jake0oo0.appster.open-content</string>
+	        <key>UIApplicationShortcutItemIconFile</key>
+	        <string>Shortcut-Content</string>
 	    </dict>
 	</array>
 	<key>UILaunchImages</key>

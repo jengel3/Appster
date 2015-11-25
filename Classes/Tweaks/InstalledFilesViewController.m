@@ -16,6 +16,7 @@
 
   self.filesList = [[UITextView alloc] initWithFrame:self.view.bounds];
   self.filesList.scrollEnabled = YES;
+  self.filesList.editable = NO;
 
   NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithFormat:@"/var/lib/dpkg/info/%@.list", self.package]];
   NSString* raw = [[NSString alloc] 

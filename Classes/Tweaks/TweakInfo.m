@@ -34,7 +34,8 @@
 
     NSString *rawStatus = [tweakMap objectForKey:@"Status"];
 
-    if ([rawStatus rangeOfString:@"deinstall"].location == NSNotFound) {
+    if ([rawStatus rangeOfString:@"deinstall"].location == NSNotFound && 
+      [rawStatus rangeOfString:@"not-installed"].location == NSNotFound) {
       self.installed = YES;
     } else {
       self.installed = NO;

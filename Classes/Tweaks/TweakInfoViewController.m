@@ -128,17 +128,23 @@
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
-  static NSString *CellIdentifier = @"Cell";
+  static NSString *InfoCellID = @"InfoCell";
+  static NSString *SubCellID = @"SubCell";
 
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+  UITableViewCell *cell;
 
-  if (!cell) {
-    if (indexPath.section <= 1) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-    } else {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+  if (indexPath.section <= 1) {
+    cell = [tableView dequeueReusableCellWithIdentifier:InfoCellID];
+    if (!cell) {
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:InfoCellID];
+    }
+  } else {
+    cell = [tableView dequeueReusableCellWithIdentifier:SubCellID];
+    if (!cell) {
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:InfoCellID];
     }
   }
+  
 
   cell.imageView.image = nil;
 

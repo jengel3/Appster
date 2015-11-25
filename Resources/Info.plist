@@ -19,7 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIconFile</key>
-	<string>Icon.png</string>
+	<string>Appster.png</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>

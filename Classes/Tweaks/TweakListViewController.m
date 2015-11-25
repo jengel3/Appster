@@ -123,33 +123,6 @@ float bestFit;
   [self.tweakTable reloadData]; 
 }
 
--(void)loadSourcesList {
-  NSString *sourcesDir = @"/etc/apt/sources.list.d";
-  NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
-  NSMutableArray *rawSources = [[NSMutableArray alloc] init];
-  [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    NSString *filename = (NSString *)obj;
-    NSString *extension = [[filename pathExtension] lowercaseString];
-    if ([extension isEqualToString:@"list"]) {
-      NSString *path = [sourcesDir stringByAppendingPathComponent:filename];
-      NSData* data = [NSData dataWithContentsOfFile:path];
-      NSString* string = [[NSString alloc] 
-        initWithBytes:[data bytes]
-        length:[data length] 
-        encoding:NSUTF8StringEncoding];
-
-      NSArray* lines = [string componentsSeparatedByString:@"\n"];
-      for (NSString *line in lines) {
-        if (!line || [line isEqualToString:@""] || [line hasPrefix:@"#"]) continue;
-        NSArray *pieces = [line componentsSeparatedByString:@" "];
-        NSString *url = pieces[1];
-        [rawSources addObject:url];
-      }
-    }
-  }];
-  self.sources = [rawSources copy];
-}
-
 -(void) showActionSheet:(id) sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
 	  message:nil
@@ -170,10 +143,37 @@ float bestFit;
 	  	[self exportList:1];
 	  }];
 
+  UIAlertAction* calcSize = [UIAlertAction actionWithTitle:@"Calculate Total Size" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self calcSize];
+    }];
+
 	[alert addAction:cancelAction];
 	[alert addAction:exportDetailed];
 	[alert addAction:exportSimple];
+  [alert addAction:calcSize];
 	[self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)calcSize {
+  float total = 0;
+
+  for (TweakInfo *info in self.tweakData) {
+    float size = [info.installSize intValue];
+    total += size;
+  }
+
+  total = total / 1000;
+
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Calculation Finished"
+   message:[NSString stringWithFormat:@"The estimated total size of all installed tweaks is: %.02fmb", total]
+   preferredStyle:UIAlertControllerStyleAlert];
+ 
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+     handler:nil];
+   
+  [alert addAction:defaultAction];
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)exportList:(int) mode {
@@ -252,6 +252,14 @@ float bestFit;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+  if (self.searchController.active) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
+
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
 	if (tableView != self.tweakTable)	return 0;
 
@@ -274,14 +282,6 @@ float bestFit;
     return @"Installed Tweaks";
   }
   return nil;
-}
-
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  if (self.searchController.active) {
-    return 1;
-  } else {
-    return 2;
-  }
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
@@ -467,5 +467,31 @@ float bestFit;
 	return self.tweakData;
 }
 
+-(void)loadSourcesList {
+  NSString *sourcesDir = @"/etc/apt/sources.list.d";
+  NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
+  NSMutableArray *rawSources = [[NSMutableArray alloc] init];
+  [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *filename = (NSString *)obj;
+    NSString *extension = [[filename pathExtension] lowercaseString];
+    if ([extension isEqualToString:@"list"]) {
+      NSString *path = [sourcesDir stringByAppendingPathComponent:filename];
+      NSData* data = [NSData dataWithContentsOfFile:path];
+      NSString* string = [[NSString alloc] 
+        initWithBytes:[data bytes]
+        length:[data length] 
+        encoding:NSUTF8StringEncoding];
+
+      NSArray* lines = [string componentsSeparatedByString:@"\n"];
+      for (NSString *line in lines) {
+        if (!line || [line isEqualToString:@""] || [line hasPrefix:@"#"]) continue;
+        NSArray *pieces = [line componentsSeparatedByString:@" "];
+        NSString *url = pieces[1];
+        [rawSources addObject:url];
+      }
+    }
+  }];
+  self.sources = [rawSources copy];
+}
 
 @end

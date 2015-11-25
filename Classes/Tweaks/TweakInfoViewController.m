@@ -202,7 +202,7 @@
       cell.detailTextLabel.text = self.info.maintainerEmail;
       cell.imageView.image = [UIImage imageNamed:@"Mail.png"];
     } else if (indexPath.row == 3) {
-      cell.textLabel.text = @"Open Depiction";
+      cell.textLabel.text = @"View Depiction";
       cell.detailTextLabel.text = self.depiction;
       cell.imageView.image = [UIImage imageNamed:@"Safari.png"];
     } else if (indexPath.row == 4) {

@@ -52,7 +52,5 @@ static void handlePrefsChange(CFNotificationCenterRef center, void *observer, CF
 
   loadPrefs();
 
-  // hiddenUpdates = [NSArray arrayWithObjects:@"com.toyopagroup.picaboo", nil];
-  // hiddenUpdates = [[NSArray alloc] init];
   %init(appStoreHooks);
 }

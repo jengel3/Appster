@@ -186,7 +186,6 @@
     key = @"identifier";
 
   }
-  NSLog(@"THINGS, %@ -- %@", key, self.mobileApps);
   NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]
     initWithKey:key
     ascending:asc

@@ -21,3 +21,16 @@ Appster is a work-in-progress replacement for the now-defunct Cydia application,
 ## Copyright
 
 All rights reserved to Jake0oo0. Appster may not be redistributed by any user or apt repository without permission from the active authors and maintainers. 
+
+# Depiction
+
+Appster allows you to view and export content from your iDevice.
+
+- Export messages and notes as a text list or the database file
+- Export installed Cydia tweaks and extensions via Email
+- Open tweaks in Cydia, view installed files, preview depictions
+- Export App Store and Apple tweaks via email
+- Open Apps in iFile or Filza to view content, or preview them in iTunes
+- Sort apps and tweaks based on name, identifier, or developer.
+- Set a default sort order and default email for exporting
+- Hide App Store updates with the press of a button

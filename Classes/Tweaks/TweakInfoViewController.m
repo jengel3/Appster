@@ -141,7 +141,7 @@
   } else {
     cell = [tableView dequeueReusableCellWithIdentifier:SubCellID];
     if (!cell) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:InfoCellID];
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SubCellID];
     }
   }
   

@@ -31,7 +31,43 @@ Appster allows you to view and export content from your iDevice.
 - Export installed Cydia tweaks and extensions via Email
 - Open tweaks in Cydia, view installed files, preview depictions
 - Export App Store and Apple tweaks via email
+- Search for specific tweaks or apps with the search bar
 - Open Apps in iFile or Filza to view content, or preview them in iTunes
 - Sort apps and tweaks based on name, identifier, or developer.
 - Set a default sort order and default email for exporting
 - Hide App Store updates with the press of a button
+- Configure Appster just like any other tweak in the settings app
+- Calculate total size of installed tweaks
+
+
+## Release 0.0.8
+- Fix installed files list
+- Changes to simple/detailed export lists for both applications and tweaks
+- Display iTunes metadata in iTunes applications - purchase date, release date, purchaser, genre, etc
+- Export and view Cydia sources
+- Open application folders in iFile
+- Open iTunes applications in the app store
+- Export messages - export the entire database to transfer to another phone, or export a single conversation or chat with all messages and timestamps
+- Export notes - export the entire database to transfer to another device, or just export a list of notes. Displays the title, body, authoring account, and a creation timestamp
+- Made changes to the author/maintainer contact buttons for Cydia tweaks, less useless information
+- WIP settings menu - will include information like a default email and other options
+
+## Release 1.0.0
+- Make installed files list uneditable
+- Add default sort order for tweaks/apps
+- Finish developers section in settings
+- Choose to not export system applications
+- Remove tweaks that haev been uninstalled
+- Add application/tweak icon and description to detail view
+- Add 3D Shortcut Icons
+- Add appster:// URL scheme
+- View depictions in Appster, or open in Cydia
+- Hide AppStore Updates
+- Sort applications/tweaks with a menu
+- Option to use Filza instead of iFile
+- New Splash screens & icon set
+- Export information about a single application
+- Hide search bars until pulled down
+- Make export emails look nicer
+- Add default recipient email to settings
+- Calculate total size of installed tweaks

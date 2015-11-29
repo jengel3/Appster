@@ -249,7 +249,7 @@ float bestFit;
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-    [self dismissViewControllerAnimated:YES completion:nil];
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {

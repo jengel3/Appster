@@ -2,6 +2,7 @@
 #import "Tweaks/TweakListViewController.h"
 #import "AppleExportHubViewController.h"
 #import "Tweaks/InstalledFilesViewController.h"
+#import "Settings/SettingsViewController.h"
 #import <UIKit/UIKit.h>
 #import <notify.h>
 
@@ -39,7 +40,10 @@
 	UINavigationController *exportNav = [[UINavigationController alloc] initWithRootViewController:exportHub];
 	exportNav.tabBarItem.image = [UIImage imageNamed:@"Apple@3x.png"];
 
-	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, nil];
+  SettingsViewController *settings = [[SettingsViewController alloc] init];
+  UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settings];
+
+	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, settingsNav, nil];
 	self.tabBarController.viewControllers = controllers;
 
 	self.window.backgroundColor = [UIColor whiteColor];

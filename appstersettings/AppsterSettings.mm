@@ -3,14 +3,10 @@
 #import <SettingsKit/SKTintedListController.h>
 #import <SettingsKit/SKPersonCell.h>
 #import <SettingsKit/SKSharedHelper.h>
+#import "AppsterSettings.h"
 
 #define valuesPath @"/User/Library/Preferences/com.jake0oo0.appster.plist"
 
-@interface AppsterSettingsListController: SKTintedListController <SKListControllerProtocol>
-@end
-
-@interface DeveloperCell : SKPersonCell
-@end
 @implementation DeveloperCell
 -(NSString*)personDescription { return @"Lead Developer"; }
 -(NSString*)name { return @"Jake0oo0"; }
@@ -18,17 +14,11 @@
 -(NSString*)imageName { return @"Jake@2x.png"; }
 @end
 
-@interface DesignerCell : SKPersonCell
-@end
 @implementation DesignerCell
 -(NSString*)personDescription { return @"Lead Designer"; }
 -(NSString*)name { return @"AOkhtenberg"; }
 -(NSString*)twitterHandle { return @"AOkhtenberg"; }
 -(NSString*)imageName { return @"AOkhtenberg@2x.png"; }
-@end
-
-
-@interface DevelopersListCell : SKTintedListController <SKListControllerProtocol>
 @end
 
 @implementation DevelopersListCell
@@ -85,7 +75,7 @@
 -(NSString*)customTitle { 
   return @"Appster"; 
 }
--(NSArray*) customSpecifiers {
+-(NSArray*)customSpecifiers {
   return @[
     @{
       @"cell": @"PSGroupCell",

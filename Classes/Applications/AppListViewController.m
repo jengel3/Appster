@@ -286,6 +286,7 @@
 	[alert addAction:cancelAction];
 	[alert addAction:exportDetailed];
 	[alert addAction:exportSimple];
+
 	[self presentViewController:alert animated:YES completion:nil];
 }
 

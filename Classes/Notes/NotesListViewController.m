@@ -67,6 +67,7 @@ static NSString *CellIdentifier = @"Cell";
   [alert addAction:cancelAction];
   [alert addAction:exportDB];
   [alert addAction:exportText];
+  
   [self presentViewController:alert animated:YES completion:nil];
 }
 

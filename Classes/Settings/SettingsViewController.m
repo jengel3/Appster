@@ -89,8 +89,8 @@
 
   if (section == 0) {
     if (row == 0) {
-      cell.textLabel.text = @"Settings";
-      cell.imageView.image = [UIImage imageNamed:@"Settings.png"];
+      cell.textLabel.text = @"Preferences";
+      cell.imageView.image = [UIImage imageNamed:@"SettingsIcon.png"];
     }
   } else if (section == 1) {
     if (row == 0) {

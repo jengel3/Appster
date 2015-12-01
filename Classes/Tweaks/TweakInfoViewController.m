@@ -266,11 +266,11 @@
   [self.navigationController popViewControllerAnimated:YES];
 
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Request Failed"
-   message:@"Appster failed to load the depiction. The page may not exist."
-   preferredStyle:UIAlertControllerStyleAlert];
+    message:@"Appster failed to load the depiction. The page may not exist."
+    preferredStyle:UIAlertControllerStyleAlert];
  
   UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-     handler:nil];
+    handler:nil];
    
   [alert addAction:defaultAction];
   [self presentViewController:alert animated:YES completion:nil];

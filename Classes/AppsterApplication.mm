@@ -42,6 +42,8 @@
 
   SettingsViewController *settings = [[SettingsViewController alloc] init];
   UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settings];
+  settingsNav.tabBarItem.image = [UIImage imageNamed:@"SettingsTab@3x.png"];
+
 
 	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, settingsNav, nil];
 	self.tabBarController.viewControllers = controllers;

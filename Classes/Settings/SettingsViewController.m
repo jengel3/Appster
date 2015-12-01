@@ -90,8 +90,7 @@
   if (section == 0) {
     if (row == 0) {
       cell.textLabel.text = @"Settings";
-      cell.imageView.image = nil;
-      // cell.imageView.image = [UIImage imageNamed:@"SettingsIcon.png"];
+      cell.imageView.image = [UIImage imageNamed:@"Settings.png"];
     }
   } else if (section == 1) {
     if (row == 0) {
@@ -107,8 +106,7 @@
       cell.imageView.image = [UIImage imageNamed:@"TwitterIcon.png"];
     } else if (row == 3) {
       cell.textLabel.text = @"Donate";
-      // cell.imageView.image = [UIImage imageNamed:@"PayPalLogo.png"];
-      cell.imageView.image = nil;
+      cell.imageView.image = [UIImage imageNamed:@"PayPal.png"];
     }
   }
 

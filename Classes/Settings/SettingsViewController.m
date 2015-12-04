@@ -32,6 +32,8 @@
     action:@selector(writeTweet:)];
   self.navigationItem.rightBarButtonItem = shareButton;
 
+
+  // setup table header
   UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
   UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
   UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 7, self.view.bounds.size.width - 90 - 20, 30)];
@@ -54,7 +56,6 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-  if (tableView != self.settingsTable) return 0;
   if (section == 0) {
     return 1;
   } else if (section == 1) {
@@ -117,9 +118,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-  
-
   int section = (int)indexPath.section;
   int row = (int)indexPath.row;
 

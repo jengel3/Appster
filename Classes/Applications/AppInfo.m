@@ -1,14 +1,7 @@
 #import "AppInfo.h"
 
 @implementation AppInfo
-  @synthesize name;
-  @synthesize identifier;
-  @synthesize type;
-  @synthesize bundle;
-  @synthesize rawPath;
-  @synthesize folder;
-  @synthesize version;
-  @synthesize icon;
+  @synthesize name, identifier, type, bundle, rawPath, folder, version, icon;
 
   - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps {
     self.identifier = ident;
@@ -49,7 +42,7 @@
   }
 
   - (NSString*) description {
-    return self.name; 
+    return [NSString stringWithFormat:@"<AppInfo name:%@ identifier:%@>", self.name, self.identifier]; 
   }
 
   - (BOOL)isiTunes {

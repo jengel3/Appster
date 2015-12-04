@@ -1,8 +1,8 @@
 #import <AppList/AppList.h>
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
+#import "../ListExportController.h"
+#import "../ListExportDelegate.h"
 
-@interface AppListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
+@interface AppListViewController : ListExportController <UITableViewDataSource, UITableViewDelegate, ListExportDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
 	@property (nonatomic, retain) ALApplicationList *applications;
   @property (nonatomic, retain) NSMutableArray *appList;
 	@property (nonatomic, retain) NSMutableArray *systemApps;

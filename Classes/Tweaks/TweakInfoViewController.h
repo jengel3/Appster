@@ -1,8 +1,9 @@
 #import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
 #import "TweakInfo.h"
+#import "../ListExportController.h"
+#import "../ListExportDelegate.h"
 
-@interface TweakInfoViewController : UIViewController  <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UIWebViewDelegate>
+@interface TweakInfoViewController : ListExportController  <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, ListExportDelegate, UIWebViewDelegate>
   @property (nonatomic, retain) NSString *package;
   @property (nonatomic, retain) NSString *name;
 

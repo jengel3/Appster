@@ -2,16 +2,13 @@
 #import "TweakInfoViewController.h"
 #import "../Utilities.h"
 #import "TweakInfo.h"
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
 #import "../MBProgressHud/MBProgressHUD.h"
 #import "../Settings.h"
 
 float bestFit;
 
 @implementation TweakListViewController
-@synthesize tweakList;
-@synthesize tweakTable;
+@synthesize tweakList, tweakTable;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -30,6 +27,8 @@ float bestFit;
 	self.tweakTable.dataSource = self;
 	self.tweakTable.delegate = self;
 
+  self.delegate = self;
+
   self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
   self.searchController.searchResultsUpdater = self;
   self.searchController.dimsBackgroundDuringPresentation = NO;
@@ -43,7 +42,7 @@ float bestFit;
   self.definesPresentationContext = YES;
   [self.searchController.searchBar sizeToFit];
 
-  [self loadSourcesList];
+  [self loadSources];
 
 	UIBarButtonItem *actionsButton = [[UIBarButtonItem alloc] initWithTitle:@"Actions" 
 		style:UIBarButtonItemStylePlain 
@@ -57,17 +56,16 @@ float bestFit;
     action:@selector(showSortMenu:)];          
   self.navigationItem.leftBarButtonItem = sortButton;
 
-
 	[self.view addSubview:self.tweakTable];
 
   self.searchResults = [[NSArray alloc] init];
-	[self generateTweakInfoList];
+	[self loadTweaks];
 
-	[self reload];
+	[self.tweakTable reloadData];
 }
 
--(void)showSortMenu:(UIBarButtonItem*)sender {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
+- (void)showSortMenu:(UIBarButtonItem*)sender {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Sort Tweaks"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
 
@@ -108,7 +106,7 @@ float bestFit;
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)sortContent:(int)sort {
+- (void)sortContent:(int)sort {
   NSString *key;
   BOOL asc = YES;
   if (sort == 1) {
@@ -127,7 +125,7 @@ float bestFit;
   [self.tweakTable reloadData]; 
 }
 
--(void) showActionSheet:(UIBarButtonItem*)sender {
+- (void)showActionSheet:(UIBarButtonItem*)sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
 	  message:nil
 	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -139,12 +137,12 @@ float bestFit;
 
 	UIAlertAction* exportDetailed = [UIAlertAction actionWithTitle:@"Export (Detailed)" style:UIAlertActionStyleDefault
 	  handler:^(UIAlertAction * action) {
-	  	[self exportList:0];
+	  	[self exportContent:0];
 	  }];
 
 	UIAlertAction* exportSimple = [UIAlertAction actionWithTitle:@"Export (Simple)" style:UIAlertActionStyleDefault
 	  handler:^(UIAlertAction * action) {
-	  	[self exportList:1];
+	  	[self exportContent:1];
 	  }];
 
   UIAlertAction* calcSize = [UIAlertAction actionWithTitle:@"Calculate Total Size" style:UIAlertActionStyleDefault
@@ -163,7 +161,7 @@ float bestFit;
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)calcSize {
+- (void)calcSize {
   float total = 0;
 
   for (TweakInfo *info in self.tweakData) {
@@ -184,80 +182,43 @@ float bestFit;
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)exportList:(int)mode {
-	if ([MFMailComposeViewController canSendMail]) {
-    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-    mailCont.mailComposeDelegate = self;
-    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+-(NSString*)getBody:(int)mode {
+  NSMutableString *body = [[NSMutableString alloc] init];
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *now = [NSDate date];
+  [body appendString:@"<b>Sources:</b><br>"];
 
-	  NSDateFormatterStyle style = NSDateFormatterShortStyle;
+  for (id source in self.sources) {
+    [body appendString:[NSString stringWithFormat:@"%@<br>", source]];  
+  }
 
-	  [formatter setTimeStyle:style];
-	  [formatter setDateStyle:style];
+  [body appendString:@"<br><b>Packages:</b><br><br>"];
 
-  	NSString *timestamp = [formatter stringFromDate:now];
+  if (mode == 0) {
+  	for (TweakInfo* tweak in self.tweakData) {
 
-    [mailCont setSubject:[NSString stringWithFormat:@"Cydia Tweaks Export - %@", timestamp]];
+  		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", tweak.package]];
+  	
+  		NSArray *keys = [tweak.rawData allKeys];
+  		for (id item in keys) {
+  			[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", item, [tweak.rawData objectForKey:item]]];
+  		}
+  	
+  		[body appendString:@"<br>"];
+  	}
+  } else if (mode == 1) {
+  	for (TweakInfo* tweak in self.tweakData) {
+  		NSString *name = tweak.name;
+  		NSString *version = tweak.version;
+  		if (!version) version = @"N/A";
 
-    style = NSDateFormatterMediumStyle;
-    [formatter setTimeStyle:style];
-	  [formatter setDateStyle:style];
-
-  	timestamp = [formatter stringFromDate:now];
-
-    AppsterSettings *settings = [[AppsterSettings alloc] init];
-    NSString *defaultEmail = [settings valueForKey:@"default_email"];
-    if (defaultEmail) {
-      [mailCont setToRecipients:@[defaultEmail]];
-    } else {
-      [mailCont setToRecipients:nil];
-    }
-
-
-    NSMutableString *body = [[NSMutableString alloc] init];
-    [body appendString:[NSString stringWithFormat:@"Cydia Tweaks Export - %@<br><br>", timestamp]];
-
-    [body appendString:@"<b>Sources:</b><br>"];
-
-    for (id source in self.sources) {
-      [body appendString:[NSString stringWithFormat:@"%@<br>", source]];  
-    }
-
-    [body appendString:@"<br><b>Packages:</b><br><br>"];
-
-    if (mode == 0) {
-    	for (TweakInfo* tweak in self.tweakData) {
-
-    		[body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", tweak.package]];
-    	
-    		NSArray *keys = [tweak.rawData allKeys];
-    		for (id item in keys) {
-    			[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", item, [tweak.rawData objectForKey:item]]];
-    		}
-    	
-    		[body appendString:@"<br>"];
-    	}
-    } else if (mode == 1) {
-    	for (TweakInfo* tweak in self.tweakData) {
-    		NSString *name = tweak.name;
-    		NSString *version = tweak.version;
-    		if (!version) version = @"N/A";
-
-    		[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", name, version]];
-    	}
-    }
-
-    [mailCont setMessageBody:body isHTML:YES];
-
-    [self presentViewController:mailCont animated:YES completion:nil];
-	}
+  		[body appendString:[NSString stringWithFormat:@"<b>%@:</b> %@<br>", name, version]];
+  	}
+  }
+  return body;
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-  [self dismissViewControllerAnimated:YES completion:nil];
+-(NSString*)getSubject {
+  return @"Cydia Tweaks Export %@";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
@@ -268,9 +229,7 @@ float bestFit;
   }
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-	if (tableView != self.tweakTable)	return 0;
-
+- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section {
   if (self.searchController.active) {
     return [self.searchResults count];
   } else {
@@ -292,7 +251,7 @@ float bestFit;
   return nil;
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
 	NSString *CellIdentifier = @"Cell";
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -375,10 +334,7 @@ float bestFit;
 	tweakView.name = name;
 	tweakView.info = [TweakInfo tweakForProperty:@"package" withValue:pkg andData:self.tweakData];
 
-	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-
-	[(UINavigationController*)tabBarController.selectedViewController pushViewController:tweakView animated:YES];
-
+	[self.navigationController pushViewController:tweakView animated:YES];
 }
 
 - (void)searchForText:(NSString*)searchText scope:(int)scope {
@@ -397,10 +353,6 @@ float bestFit;
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
   NSString *searchString = searchController.searchBar.text;
   [self searchForText:searchString scope:searchController.searchBar.selectedScopeButtonIndex];
-  [self reload];
-}
-
-- (void)reload {
   [self.tweakTable reloadData];
 }
 
@@ -408,7 +360,7 @@ float bestFit;
   [self updateSearchResultsForSearchController:self.searchController];
 }
 
--(NSArray*)generateTweakInfoList {
+-(NSArray*)loadTweaks {
 	if (!self.tweakData) {
 		NSData* data = [NSData dataWithContentsOfFile:@"/var/lib/dpkg/status"];
 		NSString* string = [[NSString alloc] 
@@ -475,7 +427,7 @@ float bestFit;
 	return self.tweakData;
 }
 
--(void)loadSourcesList {
+-(void)loadSources {
   NSString *sourcesDir = @"/etc/apt/sources.list.d";
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
   NSMutableArray *rawSources = [[NSMutableArray alloc] init];

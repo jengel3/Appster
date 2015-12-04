@@ -1,8 +1,11 @@
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
 #import <UIKit/UIKit.h>
+#import "UIMessageTableViewCell.h"
+#import "../ListExportController.h"
+#import "../ListExportDelegate.h"
 
-@interface MessagesListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
-  @property (nonatomic, retain) UITableView *chatTable;
-  @property (nonatomic, retain) NSArray *chatList;
+@interface MessagesListViewController : ListExportController <UITableViewDataSource, UITableViewDelegate, ListExportDelegate>
+  @property (nonatomic, retain) UITableView *messagesTable;
+  @property (nonatomic, strong) UIMessageTableViewCell *prototypeCell;
+  @property (nonatomic, retain) NSArray *messages;
+  @property (nonatomic, retain) NSString *chatId;
 @end

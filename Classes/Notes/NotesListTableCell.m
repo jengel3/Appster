@@ -1,8 +1,8 @@
 #import "NotesListTableCell.h"
 #import "../PureLayout/PureLayout.h"
 
-#define kLabelHorizontalInsets 15.0f
-#define kLabelVerticalInsets 10.0f
+#define horizontalInset 15.0f
+#define verticalInset 10.0f
 
 @implementation NotesListTableCell
 
@@ -28,7 +28,6 @@
     [self.contentView addSubview:self.bodyLabel];
     [self.contentView addSubview:self.titleLabel];
     [self.contentView addSubview:self.authorLabel];
-      
   }
   
   return self;
@@ -36,35 +35,35 @@
 
 - (void)updateConstraints {
   if (!self.didSetupConstraints) {
-      
+    // setup title
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
         [self.titleLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
     }];
 
-    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:kLabelVerticalInsets];
-    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
-    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
+    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:verticalInset];
+    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:horizontalInset];
+    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:horizontalInset];
 
-    //
+    // setup body 
 
-    [self.bodyLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:kLabelVerticalInsets];
+    [self.bodyLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel withOffset:verticalInset];
 
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
       [self.bodyLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
     }]; 
-   [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
-    [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
+    [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:horizontalInset];
+    [self.bodyLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:horizontalInset];
 
-    //
+    // setup author 
 
-    [self.authorLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.bodyLabel withOffset:kLabelVerticalInsets];
+    [self.authorLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.bodyLabel withOffset:verticalInset];
 
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
       [self.authorLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
     }];
-    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:kLabelVerticalInsets];
-    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
-    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
+    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:verticalInset];
+    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:horizontalInset];
+    [self.authorLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:horizontalInset];
     
     self.didSetupConstraints = YES;
   }

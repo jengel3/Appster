@@ -30,19 +30,19 @@
 
 	AppListViewController *appList = [[AppListViewController alloc] init];
 	UINavigationController *appListNav = [[UINavigationController alloc] initWithRootViewController:appList];
-	appListNav.tabBarItem.image = [UIImage imageNamed:@"iTunes.png"];
+	appListNav.tabBarItem.image = [UIImage imageNamed:@"iTunesTab.png"];
 
 	TweakListViewController *tweakList = [[TweakListViewController alloc] init];
 	UINavigationController *tweakListNav = [[UINavigationController alloc] initWithRootViewController:tweakList];
-	tweakListNav.tabBarItem.image = [UIImage imageNamed:@"Cydia.png"];
+	tweakListNav.tabBarItem.image = [UIImage imageNamed:@"CydiaTab.png"];
 
 	AppleExportHubViewController *exportHub = [[AppleExportHubViewController alloc] init];
 	UINavigationController *exportNav = [[UINavigationController alloc] initWithRootViewController:exportHub];
-	exportNav.tabBarItem.image = [UIImage imageNamed:@"Apple@3x.png"];
+	exportNav.tabBarItem.image = [UIImage imageNamed:@"AppleTab.png"];
 
   SettingsViewController *settings = [[SettingsViewController alloc] init];
   UINavigationController *settingsNav = [[UINavigationController alloc] initWithRootViewController:settings];
-  settingsNav.tabBarItem.image = [UIImage imageNamed:@"SettingsTab@3x.png"];
+  settingsNav.tabBarItem.image = [UIImage imageNamed:@"SettingsTab.png"];
 
 
 	NSArray *controllers = [NSArray arrayWithObjects:appListNav, tweakListNav, exportNav, settingsNav, nil];

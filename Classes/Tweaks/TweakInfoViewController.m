@@ -1,7 +1,5 @@
 #import "TweakInfoViewController.h"
 #import "../Utilities.h"
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
 #import "../MBProgressHud/MBProgressHUD.h"
 #import "TweakInfo.h"
 #import "InstalledFilesViewController.h"
@@ -27,6 +25,8 @@
   self.infoTable.dataSource = self;
   self.infoTable.delegate = self;
 
+  self.delegate = self;
+
   UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
   UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
   UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 7, self.view.bounds.size.width - 90 - 20, 30)];
@@ -46,62 +46,29 @@
   [self.view addSubview:self.infoTable];
 }
 
-- (void)showExport:(id)sender {
-  if ([MFMailComposeViewController canSendMail]) {
-    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-    mailCont.mailComposeDelegate = self;
-    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+-(NSString*)getBody:(int)mode {
+  NSMutableString *body = [[NSMutableString alloc] init];
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *now = [NSDate date];
+  NSArray *keys = [self.info.rawData allKeys];
 
-    NSDateFormatterStyle style = NSDateFormatterLongStyle;
+  [body appendString:[NSString stringWithFormat:@"<b>%@</b><br><br>", self.name ? self.name : self.package]];
 
-    [formatter setTimeStyle:style];
-    [formatter setDateStyle:style];
+  [body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", self.package]];
 
-    NSString *timestamp = [formatter stringFromDate:now];
+  for (id key in keys) {
+    if ([key isEqualToString:@"Name"]) continue;
 
-    [mailCont setSubject:[NSString stringWithFormat:@"Cydia Tweak Export - %@", timestamp]];
-
-    style = NSDateFormatterMediumStyle;
-    [formatter setTimeStyle:style];
-    [formatter setDateStyle:style];
-
-    timestamp = [formatter stringFromDate:now];
-
-    AppsterSettings *settings = [[AppsterSettings alloc] init];
-    NSString *defaultEmail = [settings valueForKey:@"default_email"];
-    if (defaultEmail) {
-      [mailCont setToRecipients:@[defaultEmail]];
-    } else {
-      [mailCont setToRecipients:nil];
-    }
-
-
-    NSMutableString *body = [[NSMutableString alloc] init];
-    [body appendString:[NSString stringWithFormat:@"Cydia Tweak Export - %@ <br><br>", timestamp]];
-
-    NSArray *keys = [self.info.rawData allKeys];
-
-    [body appendString:[NSString stringWithFormat:@"<b>%@</b><br><br>", self.name ? self.name : self.package]];
-
-    [body appendString:[NSString stringWithFormat:@"<b>Package:</b> %@<br>", self.package]];
-
-    for (id key in keys) {
-      if ([key isEqualToString:@"Name"]) continue;
-
-      [body appendString:[NSString stringWithFormat:@"<b>%@</b>: %@<br>", key, [self.info.rawData objectForKey:key]]];
-    }
-
-    [mailCont setMessageBody:body isHTML:YES];
-
-    [self presentViewController:mailCont animated:YES completion:nil];
+    [body appendString:[NSString stringWithFormat:@"<b>%@</b>: %@<br>", key, [self.info.rawData objectForKey:key]]];
   }
+
+  return body;
+}
+
+-(NSString*)getSubject {
+  return @"Cydia Tweak Export %@";
 }
 
 - (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-  if (tableView != self.infoTable) return 0;
   if (section == 0) {
     return 4;
   } else if (section == 1) {
@@ -144,7 +111,6 @@
       cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SubCellID];
     }
   }
-  
 
   cell.imageView.image = nil;
 
@@ -227,9 +193,7 @@
       InstalledFilesViewController *fileList = [[InstalledFilesViewController alloc] init];
       fileList.package = self.info.package;
 
-      UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-
-      [(UINavigationController*)tabBarController.selectedViewController pushViewController:fileList animated:YES];
+      [self.navigationController pushViewController:fileList animated:YES];
     } else if (indexPath.row == 1) {
       [self sendEmail:0];
     } else if (indexPath.row == 2) {
@@ -304,7 +268,6 @@
 
     [self presentViewController:mailCont animated:YES completion:nil];
   }
-
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {

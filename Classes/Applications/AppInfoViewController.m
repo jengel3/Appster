@@ -17,6 +17,8 @@
   self.infoTable.dataSource = self;
   self.infoTable.delegate = self;
 
+  self.delegate = self;
+
   UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 70)];
   UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 60, 60)];
   UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 30, self.view.bounds.size.width - 90 - 20, 30)];
@@ -59,7 +61,7 @@
     }];
 
   UIAlertAction *hideUpdates;
-  if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+  if (![self.appInfo isSystem]) {
     AppsterSettings *settings = [[AppsterSettings alloc] init];
     NSMutableArray *current = [settings valueForKey:@"hidden_updates"];
     if (!current) current = [[NSMutableArray alloc] init];
@@ -81,7 +83,7 @@
 
   UIAlertAction *exportApp = [UIAlertAction actionWithTitle:@"Export Application" style:UIAlertActionStyleDefault
     handler:^(UIAlertAction * action) {
-      [self exportApp];
+      [self exportContent:0];
     }];
 
   [alert addAction:cancelAction];
@@ -94,69 +96,38 @@
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)exportApp {
-  if ([MFMailComposeViewController canSendMail]) {
-    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-    mailCont.mailComposeDelegate = self;
-    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+-(NSString *)getBody:(int)mode {
+  NSMutableString *body = [[NSMutableString alloc] init];
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *now = [NSDate date];
-
-    NSDateFormatterStyle style = NSDateFormatterShortStyle;
-
-    [formatter setTimeStyle:style];
-    [formatter setDateStyle:style];
-
-    NSString *timestamp = [formatter stringFromDate:now];
-
-    [mailCont setSubject:[NSString stringWithFormat:@"iTunes Application Export - %@", timestamp]];
-
-    AppsterSettings *settings = [[AppsterSettings alloc] init];
-    NSString *defaultEmail = [settings valueForKey:@"default_email"];
-    if (defaultEmail) {
-      [mailCont setToRecipients:@[defaultEmail]];
-    } else {
-      [mailCont setToRecipients:nil];
-    }
-
-    NSMutableString *body = [[NSMutableString alloc] init];
-    [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
-
-    AppInfo *app = self.appInfo;
-    if ([app.type isEqualToString:@"iTunes"]) {
-      [body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, app.version]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;App ID: %@<br>", app.pk]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Developer: %@<br>", app.artist]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchase Date: %@<br>", app.purchaseDate]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchaser: %@<br>", app.purchaserAccount]];
-    } else {
-      [body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", app.name]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
-      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Bundle Version: %@<br>", app.bundleVersion]];
-    }
-    [body appendString:@"<br><br>"];
-
-    [mailCont setMessageBody:body isHTML:YES];
-
-    [self presentViewController:mailCont animated:YES completion:nil];
+  AppInfo *app = self.appInfo;
+  if ([app isiTunes]) {
+    [body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, app.version]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;App ID: %@<br>", app.pk]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Developer: %@<br>", app.artist]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchase Date: %@<br>", app.purchaseDate]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Purchaser: %@<br>", app.purchaserAccount]];
+  } else {
+    [body appendString:[NSString stringWithFormat:@"<b>%@</b><br>", app.name]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Identifier: %@<br>", app.identifier]];
+    [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;Bundle Version: %@<br>", app.bundleVersion]];
   }
+  [body appendString:@"<br><br>"];
+
+  return body;
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-  [self dismissViewControllerAnimated:YES completion:nil];
+- (NSString *)getSubject {
+  return @"Appster Application Export %@";
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-  if (tableView != self.infoTable) return 0;
-
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (section == 0) {
     return 3;
   } else if (section == 1) {
     return 4;
   } else if (section == 2) {
-    if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+    if ([self.appInfo isiTunes]) {
       return 4;
     }
     if ([self.appInfo isSystem]) {
@@ -174,8 +145,8 @@
   return 0;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
-  if ([self.appInfo.type isEqualToString:@"System"]) return 3;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+  if ([self.appInfo isSystem]) return 3;
   return 4;
 }
 
@@ -185,7 +156,7 @@
   } else if (section == 1) {
     return @"Bundle";
   } else if (section == 2) {
-    if ([self.appInfo.type isEqualToString:@"iTunes"]) {
+    if ([self.appInfo isiTunes]) {
       return @"iTunes";
     } else {
       return @"Actions";
@@ -196,7 +167,7 @@
   return nil;
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
   static NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -282,7 +253,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-  if (([self.appInfo.type isEqualToString: @"iTunes"] && indexPath.section == 3) || (indexPath.section == 2 && [self.appInfo.type isEqualToString:@"System"])) {
+  if (([self.appInfo isiTunes] && indexPath.section == 3) || (indexPath.section == 2 && [self.appInfo isSystem])) {
     if (indexPath.row == 0) {
       UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
       NSString *fileURL = [self.appInfo.rawPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -318,5 +289,4 @@
 - (id)valueForKey:(NSString*)key {
   return [self.appList valueForKey:key forDisplayIdentifier:self.appInfo.identifier];
 }
-
 @end

@@ -1,9 +1,9 @@
 #import <AppList/AppList.h>
 #import "AppInfo.h"
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
+#import "../ListExportController.h"
+#import "../ListExportDelegate.h"
 
-@interface AppInfoViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate>
+@interface AppInfoViewController : ListExportController <UITableViewDataSource, UITableViewDelegate, ListExportDelegate>
   @property (nonatomic, retain) AppInfo* appInfo;
   @property (nonatomic, retain) UITableView *infoTable;
   @property (nonatomic, retain) ALApplicationList *appList;

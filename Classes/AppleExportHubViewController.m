@@ -23,16 +23,15 @@
   [self.view addSubview:self.hubTable];
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-  if (tableView != self.hubTable) return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return 6;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -81,9 +80,7 @@
   }
 
   if (controller) {
-    UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-
-    [(UINavigationController*)tabBarController.selectedViewController pushViewController:controller animated:YES];
+    [self.navigationController pushViewController:controller animated:YES];
   }
 }
 @end

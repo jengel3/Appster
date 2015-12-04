@@ -23,7 +23,7 @@ static NSString *CellIdentifier = @"Cell";
 
   [self.notesTable registerClass:[NotesListTableCell class] forCellReuseIdentifier:CellIdentifier];
 
-  self.notesTable.estimatedRowHeight = 44;
+  self.notesTable.estimatedRowHeight = 50;
   self.notesTable.rowHeight = UITableViewAutomaticDimension;
 
 
@@ -42,7 +42,6 @@ static NSString *CellIdentifier = @"Cell";
 
   [self loadData];
 }
-
 
 - (void)exportOptions:(UIBarButtonItem*)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Notes Export Options"
@@ -132,21 +131,20 @@ static NSString *CellIdentifier = @"Cell";
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void) loadData {
+- (void)loadData {
   self.notes = [self findNotes];
   [self.notesTable reloadData];
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
   return 1;
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-  if (tableView != self.notesTable) return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   return [self.notes count];
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {\
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {\
   NotesListTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   
   NoteData *note = [self.notes objectAtIndex:indexPath.row];
@@ -173,10 +171,9 @@ static NSString *CellIdentifier = @"Cell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
 }
 
-- (NSArray*) findNotes {
+- (NSArray*)findNotes {
   NSString *path = @"/var/mobile/Library/Notes/notes.sqlite";
   sqlite3_stmt *statement;
 

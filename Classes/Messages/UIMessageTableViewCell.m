@@ -1,15 +1,14 @@
 #import "UIMessageTableViewCell.h"
 #import "../PureLayout/PureLayout.h"
 
-#define kLabelHorizontalInsets 15.0f
-#define kLabelVerticalInsets 10.0f
+#define horizontalInset 15.0f
+#define verticalInset 10.0f
 
 @implementation UIMessageTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
   if (self) {
-      
     self.msgLabel = [UILabel newAutoLayoutView];
     [self.msgLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [self.msgLabel setNumberOfLines:0];
@@ -22,7 +21,6 @@
 
     [self.contentView addSubview:self.msgLabel];
     [self.contentView addSubview:self.timestampLabel];
-      
   }
   
   return self;
@@ -31,22 +29,25 @@
 - (void)updateConstraints {
   if (!self.didSetupConstraints) {
       
+    // setup content 
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-        [self.msgLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
+      [self.msgLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
     }];
 
-    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:kLabelVerticalInsets];
-    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
-    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
+    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:verticalInset];
+    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:horizontalInset];
+    [self.msgLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:horizontalInset];
 
-    [self.timestampLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.msgLabel withOffset:kLabelVerticalInsets];
+
+    // setup timestamp
+    [self.timestampLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.msgLabel withOffset:verticalInset];
 
     [NSLayoutConstraint autoSetPriority:UILayoutPriorityRequired forConstraints:^{
       [self.timestampLabel autoSetContentCompressionResistancePriorityForAxis:ALAxisVertical];
     }];
-    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:kLabelVerticalInsets];
-    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:kLabelHorizontalInsets];
-    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:kLabelHorizontalInsets];
+    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:verticalInset];
+    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:horizontalInset];
+    [self.timestampLabel autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:horizontalInset];
     
     self.didSetupConstraints = YES;
   }

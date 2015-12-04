@@ -2,15 +2,11 @@
 #import <AppList/AppList.h>
 #import "AppInfo.h"
 #import "AppInfoViewController.h"
-#import <MessageUI/MessageUI.h> 
-#import <MessageUI/MFMailComposeViewController.h> 
 #import "../Settings.h"
 #import "../Utilities.h"
 
 @implementation AppListViewController
-@synthesize appList;
-@synthesize appTable;
-@synthesize applications;
+@synthesize appList, appTable, applications;
 
 - (NSArray *)_hiddenDisplayIdentifiers {
 	NSArray *result = self.hiddenDisplayIdentifiers;
@@ -108,6 +104,8 @@
 	self.appTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	self.appTable.dataSource = self;
 	self.appTable.delegate = self;
+  
+  self.delegate = self;
 
   self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
   self.searchController.searchResultsUpdater = self;
@@ -176,6 +174,38 @@
   [self presentViewController:alert animated:YES completion:nil];
 }
 
+
+- (void)showActionSheet:(UIBarButtonItem*)sender {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
+    message:nil
+    preferredStyle:UIAlertControllerStyleActionSheet];
+
+  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+    handler:^(UIAlertAction * action) {
+      [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+
+  UIAlertAction* exportDetailed = [UIAlertAction actionWithTitle:@"Export (Detailed)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self exportContent:0];
+    }];
+
+  UIAlertAction* exportSimple = [UIAlertAction actionWithTitle:@"Export (Simple)" style:UIAlertActionStyleDefault
+    handler:^(UIAlertAction * action) {
+      [self exportContent:1];
+    }];
+   
+  [alert addAction:cancelAction];
+  [alert addAction:exportDetailed];
+  [alert addAction:exportSimple];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
+
+  [self presentViewController:alert animated:YES completion:nil];
+}
+
+
 -(void)sortContent:(int)sort {
   NSString *key;
   BOOL asc = YES;
@@ -190,6 +220,7 @@
     key = @"identifier";
 
   }
+
   NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]
     initWithKey:key
     ascending:asc
@@ -201,104 +232,46 @@
   [self.appTable reloadData]; 
 }
 
--(void)exportList:(int) mode {
-	if ([MFMailComposeViewController canSendMail]) {
-    MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
-    mailCont.mailComposeDelegate = self;
-    mailCont.modalPresentationStyle = UIModalPresentationFullScreen;
+-(NSString*)getBody:(int)mode {
+	AppsterSettings *settings = [[AppsterSettings alloc] init];
 
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *now = [NSDate date];
+  NSMutableString *body = [[NSMutableString alloc] init];
+  NSArray *apps;
 
-	  NSDateFormatterStyle style = NSDateFormatterShortStyle;
+  BOOL exportSystem = [[settings valueForKey:@"export_system" orDefault:false] boolValue];
 
-	  [formatter setTimeStyle:style];
-	  [formatter setDateStyle:style];
+  if (exportSystem) {
+    apps = self.appList;
+  } else {
+    apps = self.mobileApps;
+  }
 
-  	NSString *timestamp = [formatter stringFromDate:now];
-
-    [mailCont setSubject:[NSString stringWithFormat:@"iTunes Application Export - %@", timestamp]];
-
-    AppsterSettings *settings = [[AppsterSettings alloc] init];
-    NSString *defaultEmail = [settings valueForKey:@"default_email"];
-    if (defaultEmail) {
-      [mailCont setToRecipients:@[defaultEmail]];
-    } else {
-      [mailCont setToRecipients:nil];
+  if (mode == 0) {
+    for (AppInfo* app in apps) {
+      [body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, (app.version ? app.version : app.bundleVersion)]];
+      [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Identifier:</i> %@<br>", app.identifier]];
+      if (![app isSystem]) {
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>App ID:</i> %@<br>", app.pk]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Developer:</i> %@<br>", app.artist]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchase Date:</i> %@<br>", app.purchaseDate]];
+        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchaser:</i> %@<br>", app.purchaserAccount]];
+      }
+      [body appendString:@"<br><br>"];
     }
-
-    NSMutableString *body = [[NSMutableString alloc] init];
-    [body appendString:[NSString stringWithFormat:@"iTunes Application Export - %@ <br><br><br>", timestamp]];
-    NSArray *apps;
-
-    BOOL exportSystem = [[settings valueForKey:@"export_system" orDefault:false] boolValue];
-
-    if (exportSystem) {
-      apps = self.appList;
-    } else {
-      apps = self.mobileApps;
+  } else if (mode == 1) {
+    for (AppInfo* app in apps) {
+      [body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, (app.version ? app.version : app.bundleVersion)]];
     }
+  }
 
-    if (mode == 0) {
-    	for (AppInfo* app in apps) {
-    		[body appendString:[NSString stringWithFormat:@"<b>%@ - %@</b><br>", app.name, (app.version ? app.version : app.bundleVersion)]];
-        [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Identifier:</i> %@<br>", app.identifier]];
-        if (![app isSystem]) {
-          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>App ID:</i> %@<br>", app.pk]];
-          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Developer:</i> %@<br>", app.artist]];
-          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchase Date:</i> %@<br>", app.purchaseDate]];
-          [body appendString:[NSString stringWithFormat:@"&nbsp;&nbsp;<i>Purchaser:</i> %@<br>", app.purchaserAccount]];
-        }
-    		[body appendString:@"<br><br>"];
-    	}
-    } else if (mode == 1) {
-    	for (AppInfo* app in apps) {
-    		[body appendString:[NSString stringWithFormat:@"<b>%@</b> - %@<br>", app.name, (app.version ? app.version : app.bundleVersion)]];
-    	}
-    }
-
-    [mailCont setMessageBody:body isHTML:YES];
-
-    [self presentViewController:mailCont animated:YES completion:nil];
-	}
+  return body;
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-  [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)showActionSheet:(UIBarButtonItem*)sender {
-	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
-	  message:nil
-	  preferredStyle:UIAlertControllerStyleActionSheet];
-
-	UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
-	  handler:^(UIAlertAction * action) {
-	   	[self dismissViewControllerAnimated:YES completion:nil];
-	  }];
-
-	UIAlertAction* exportDetailed = [UIAlertAction actionWithTitle:@"Export (Detailed)" style:UIAlertActionStyleDefault
-	  handler:^(UIAlertAction * action) {
-	  	[self exportList:0];
-	  }];
-
-	UIAlertAction* exportSimple = [UIAlertAction actionWithTitle:@"Export (Simple)" style:UIAlertActionStyleDefault
-	  handler:^(UIAlertAction * action) {
-	  	[self exportList:1];
-	  }];
-	 
-	[alert addAction:cancelAction];
-	[alert addAction:exportDetailed];
-	[alert addAction:exportSimple];
-
-  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
-  presenter.barButtonItem = sender;
-
-	[self presentViewController:alert animated:YES completion:nil];
+-(NSString*)getSubject {
+  return @"Applications Export %@";
 }
 
 - (NSInteger)tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
-	if (tableView != self.appTable) return 0;
   if (self.searchController.active) {
     return [self.searchResults count];
   }
@@ -368,10 +341,7 @@
   app.icon = [self.applications iconOfSize:ALApplicationIconSizeLarge forDisplayIdentifier:app.identifier];
 	appView.appInfo = app;
 
-	UITabBarController *tabBarController = (UITabBarController *)[[[UIApplication sharedApplication] delegate] window].rootViewController;
-
-	[(UINavigationController*)tabBarController.selectedViewController pushViewController:appView animated:YES];
-
+	[self.navigationController pushViewController:appView animated:YES];
 }
 
 - (void)searchForText:(NSString*)searchText scope:(int)scope {

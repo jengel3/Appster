@@ -67,11 +67,11 @@ static NSString *CellIdentifier = @"Cell";
   return 1;
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
+- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section {
   return [self.messages count];
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
   UIMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   SMSMessage *msg = (SMSMessage*)[self.messages objectAtIndex:indexPath.row];
 

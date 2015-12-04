@@ -64,7 +64,7 @@
   return 0;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView {
   return 2;
 }
 
@@ -77,7 +77,7 @@
   return nil;
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
   static NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

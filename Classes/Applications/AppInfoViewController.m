@@ -210,6 +210,7 @@
   if (indexPath.section == 0) {
 
     if (indexPath.row == 0) {
+      cell.accessoryType = 0;
       cell.textLabel.text = @"Name";
       cell.detailTextLabel.text = self.appInfo.name;
     } else if (indexPath.row == 1) {
@@ -224,6 +225,7 @@
     }
 
   } else if (indexPath.section == 1) {
+    cell.accessoryType = 0;
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Bundle";
       cell.detailTextLabel.text = self.appInfo.bundle;
@@ -238,6 +240,7 @@
       cell.detailTextLabel.text = self.appInfo.type;
     }
   } else if (indexPath.section == 2 && [self.appInfo isiTunes]) {
+    cell.accessoryType = 0;
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Developer";
       cell.detailTextLabel.text = self.appInfo.artist;
@@ -252,16 +255,18 @@
       cell.detailTextLabel.text = self.appInfo.purchaserAccount;
     }
   } else if (indexPath.section == 2 || indexPath.section == 3) {
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if (indexPath.row == 0) {
       AppsterSettings *settings = [[AppsterSettings alloc] init];
       int editor = [[settings valueForKey:@"file_explorer" orDefault:@1] intValue];
       if (editor == 1) {
         cell.textLabel.text = @"Open in iFile";
+        cell.imageView.image = [UIImage imageNamed:@"iFileIcon.png"];
       } else if (editor == 2) {
         cell.textLabel.text = @"Open in Filza";
+        cell.imageView.image = [UIImage imageNamed:@"FilzaIcon.png"];
       }
       cell.detailTextLabel.text = nil;
-      cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
     } else if (indexPath.row == 1) {
       cell.textLabel.text = @"Open in iTunes";
       cell.detailTextLabel.text = nil;

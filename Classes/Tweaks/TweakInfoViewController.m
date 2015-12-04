@@ -149,6 +149,7 @@
   cell.imageView.image = nil;
 
   if (indexPath.section == 0) {
+    cell.accessoryType = 0;
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Name";
       cell.detailTextLabel.text = self.info.name;
@@ -163,6 +164,7 @@
       cell.detailTextLabel.text = self.info.section;
     }
   } else if (indexPath.section == 1) {
+    cell.accessoryType = 0;
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Description";
       cell.detailTextLabel.text = self.info.description;
@@ -180,6 +182,7 @@
       cell.detailTextLabel.text = self.info.architecture;
     }
   } else if (indexPath.section == 2) {
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     if (indexPath.row == 0) {
       cell.textLabel.text = @"Installed Files";
       cell.imageView.image = [UIImage imageNamed:@"Folder.png"];
@@ -188,6 +191,7 @@
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
         cell.detailTextLabel.enabled = NO;
+        cell.accessoryType = 0;
       }
       cell.textLabel.text = @"Email Author";
       cell.detailTextLabel.text = self.info.authorEmail;
@@ -197,6 +201,7 @@
         cell.userInteractionEnabled = NO;
         cell.textLabel.enabled = NO;
         cell.detailTextLabel.enabled = NO;
+        cell.accessoryType = 0;
       }
       cell.textLabel.text = @"Email Maintainer";
       cell.detailTextLabel.text = self.info.maintainerEmail;

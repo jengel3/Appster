@@ -134,7 +134,7 @@
   }
 }
 
--(void)showSortMenu:(id)sender {
+-(void)showSortMenu:(UIBarButtonItem*)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -169,6 +169,10 @@
   [alert addAction:alphaDescending];
   [alert addAction:developer];
   [alert addAction:identifier];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
+
   [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -263,7 +267,7 @@
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)showActionSheet:(id)sender {
+- (void)showActionSheet:(UIBarButtonItem*)sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
 	  message:nil
 	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -286,6 +290,9 @@
 	[alert addAction:cancelAction];
 	[alert addAction:exportDetailed];
 	[alert addAction:exportSimple];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
 
 	[self presentViewController:alert animated:YES completion:nil];
 }

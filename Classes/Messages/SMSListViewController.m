@@ -104,9 +104,7 @@ static NSString *CellIdentifier = @"Cell";
 }
 
 - (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
-
   UIMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-  
   SMSMessage *msg = (SMSMessage*)[self.messages objectAtIndex:indexPath.row];
 
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -154,7 +152,7 @@ static NSString *CellIdentifier = @"Cell";
   [hud hide:YES afterDelay:0.5];
 }
 
-- (NSMutableArray*) findMessages {
+- (NSMutableArray*)findMessages {
     NSString *path = @"/var/mobile/Library/SMS/sms.db";
     sqlite3_stmt *statement;
 

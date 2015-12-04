@@ -44,7 +44,7 @@ static NSString *CellIdentifier = @"Cell";
 }
 
 
-- (void)exportOptions:(id)sender {
+- (void)exportOptions:(UIBarButtonItem*)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Notes Export Options"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -67,6 +67,9 @@ static NSString *CellIdentifier = @"Cell";
   [alert addAction:cancelAction];
   [alert addAction:exportDB];
   [alert addAction:exportText];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
   
   [self presentViewController:alert animated:YES completion:nil];
 }

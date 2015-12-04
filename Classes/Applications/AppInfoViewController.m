@@ -48,7 +48,7 @@
   [self.infoTable reloadData];
 }
 
--(void) showActionSheet:(id) sender {
+-(void)showActionSheet:(UIBarButtonItem*)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -87,6 +87,9 @@
   [alert addAction:cancelAction];
   if (hideUpdates) [alert addAction:hideUpdates];
   [alert addAction:exportApp];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
 
   [self presentViewController:alert animated:YES completion:nil];
 }

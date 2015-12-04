@@ -21,7 +21,7 @@ float bestFit;
   return self;
 }
 
-- (void) viewDidLoad {
+- (void)viewDidLoad {
 	self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
 	self.title = @"Cydia Tweaks";
 	self.view.backgroundColor = [UIColor whiteColor];
@@ -66,7 +66,7 @@ float bestFit;
 	[self reload];
 }
 
--(void)showSortMenu:(id)sender {
+-(void)showSortMenu:(UIBarButtonItem*)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -101,6 +101,10 @@ float bestFit;
   [alert addAction:alphaDescending];
   [alert addAction:author];
   [alert addAction:package];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
+
   [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -123,7 +127,7 @@ float bestFit;
   [self.tweakTable reloadData]; 
 }
 
--(void) showActionSheet:(id) sender {
+-(void) showActionSheet:(UIBarButtonItem*)sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
 	  message:nil
 	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -152,6 +156,10 @@ float bestFit;
 	[alert addAction:exportDetailed];
 	[alert addAction:exportSimple];
   [alert addAction:calcSize];
+
+  UIPopoverPresentationController *presenter = [alert popoverPresentationController];
+  presenter.barButtonItem = sender;
+
 	[self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -176,7 +184,7 @@ float bestFit;
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(void)exportList:(int) mode {
+-(void)exportList:(int)mode {
 	if ([MFMailComposeViewController canSendMail]) {
     MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
     mailCont.mailComposeDelegate = self;
@@ -252,7 +260,7 @@ float bestFit;
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
   if (self.searchController.active) {
     return 1;
   } else {

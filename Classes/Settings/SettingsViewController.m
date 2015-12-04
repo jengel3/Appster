@@ -137,7 +137,7 @@
     } else if (row == 2) {
       [self openTwitter:@"AOkhtenberg"];
     } else if (row == 3) {
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WJZXHG5MSE85L&lc=US&item_name=Jake%27s%20Development&item_number=102&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"]];
+      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://paypal.me/itsjake"]];
     }
   }
 }

@@ -86,21 +86,21 @@
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void) loadData {
+- (void)loadData {
   self.chatList = [self findChats];
   [self.chatTable reloadData];
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView * ) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
   return 1;
 }
 
-- (NSInteger) tableView: (UITableView * ) tableView numberOfRowsInSection: (NSInteger) section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (tableView != self.chatTable) return 0;
   return [self.chatList count];
 }
 
-- (UITableViewCell * ) tableView: (UITableView * ) tableView cellForRowAtIndexPath: (NSIndexPath * ) indexPath {
+- (UITableViewCell *)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
   NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

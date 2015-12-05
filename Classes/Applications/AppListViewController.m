@@ -397,7 +397,6 @@
     }
   }
 
-
   AppsterSettings *settings = [[AppsterSettings alloc] init];
 
   NSString *sortKey = [settings valueForKey:@"apps_default_sort" orDefault:@"alpha_asc"];

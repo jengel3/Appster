@@ -4,10 +4,9 @@
 #import "../Settings.h"
 
 @implementation AppInfoViewController
-@synthesize appInfo;
-@synthesize infoTable;
+@synthesize appInfo, infoTable;
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
   self.title = self.appInfo.identifier;
 
   self.view = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] applicationFrame]];
@@ -50,7 +49,7 @@
   [self.infoTable reloadData];
 }
 
--(void)showActionSheet:(UIBarButtonItem *)sender {
+- (void)showActionSheet:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -167,7 +166,7 @@
   return nil;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -274,8 +273,6 @@
   UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
   if (!cell.detailTextLabel || !cell.detailTextLabel.text) return;
 
-
-  
   UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
   pasteboard.string = cell.detailTextLabel.text;
   MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

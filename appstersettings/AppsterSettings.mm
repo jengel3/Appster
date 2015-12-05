@@ -36,19 +36,19 @@
 
 -(NSArray *)customSpecifiers {
   return @[
-   @{
+    @{
       @"cell": @"PSLinkCell",
       @"cellClass": @"DeveloperCell",
       @"height": @100,
       @"action": @"openJakeTwitter"
     },
-   @{
+    @{
       @"cell": @"PSLinkCell",
       @"cellClass": @"DesignerCell",
       @"height": @100,
       @"action": @"openAOkTwitter"
     }
-   ];
+  ];
 }
 @end
 

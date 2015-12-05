@@ -6,13 +6,12 @@
 #import <UIKit/UIKit.h>
 #import <notify.h>
 
-
 @interface AppsterApplication: UIApplication <UIApplicationDelegate> {
 	UIWindow *_window;
 	UITabBarController *_tabBarController;
 }
-@property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) UITabBarController *tabBarController;
+  @property (nonatomic, retain) UIWindow *window;
+  @property (nonatomic, retain) UITabBarController *tabBarController;
 @end
 
 @interface UIApplicationShortcutItem
@@ -20,8 +19,7 @@
 @end
 
 @implementation AppsterApplication
-@synthesize window;
-@synthesize tabBarController;
+@synthesize window, tabBarController;
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

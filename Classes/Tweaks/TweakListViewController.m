@@ -182,7 +182,7 @@ float bestFit;
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(NSString *)getBody:(int)mode {
+- (NSString *)getBody:(int)mode {
   NSMutableString *body = [[NSMutableString alloc] init];
 
   [body appendString:@"<b>Sources:</b><br>"];
@@ -217,7 +217,7 @@ float bestFit;
   return body;
 }
 
--(NSString *)getSubject {
+- (NSString *)getSubject {
   return @"Cydia Tweaks Export %@";
 }
 
@@ -229,7 +229,7 @@ float bestFit;
   }
 }
 
-- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (self.searchController.active) {
     return [self.searchResults count];
   } else {
@@ -251,7 +251,7 @@ float bestFit;
   return nil;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSString *CellIdentifier = @"Cell";
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -360,7 +360,7 @@ float bestFit;
   [self updateSearchResultsForSearchController:self.searchController];
 }
 
--(NSArray *)loadTweaks {
+- (NSArray *)loadTweaks {
 	if (!self.tweakData) {
 		NSData* data = [NSData dataWithContentsOfFile:@"/var/lib/dpkg/status"];
 		NSString* string = [[NSString alloc] 
@@ -427,7 +427,7 @@ float bestFit;
 	return self.tweakData;
 }
 
--(void)loadSources {
+- (void)loadSources {
   NSString *sourcesDir = @"/etc/apt/sources.list.d";
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sourcesDir error:NULL];
   NSMutableArray *rawSources = [[NSMutableArray alloc] init];

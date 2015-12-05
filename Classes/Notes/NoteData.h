@@ -5,5 +5,4 @@
   @property (nonatomic, retain) NSString *author;
   @property (nonatomic, retain) NSDate *createdAt;
   @property (nonatomic, retain) NSDate *updatedAt;
-
 @end

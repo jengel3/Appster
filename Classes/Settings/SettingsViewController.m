@@ -64,7 +64,7 @@
   return 0;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 2;
 }
 
@@ -77,7 +77,7 @@
   return nil;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -140,14 +140,14 @@
   }
 }
 
--(void)writeTweet:(id)sender {
+- (void)writeTweet:(id)sender {
   SLComposeViewController *composeController = [SLComposeViewController
     composeViewControllerForServiceType:SLServiceTypeTwitter];
   [composeController setInitialText:@"I'm using #Appster by @itsjake88 to export content from my iDevice. Check it out!"];
   [self presentViewController:composeController animated:YES completion:nil];
 }
 
--(void)openTwitter:(NSString *)username {
+- (void)openTwitter:(NSString *)username {
   if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot:"]]){
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[@"tweetbot:///user_profile/" stringByAppendingString:username]]];
   } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitterrific:"]]) {
@@ -161,7 +161,7 @@
   }
 }
 
--(void)contact {
+- (void)contact {
   if ([MFMailComposeViewController canSendMail]) {
     MFMailComposeViewController *mailCont = [[MFMailComposeViewController alloc] init];
     mailCont.mailComposeDelegate = self;

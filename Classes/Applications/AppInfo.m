@@ -1,55 +1,55 @@
 #import "AppInfo.h"
 
 @implementation AppInfo
-  @synthesize name, identifier, type, bundle, rawPath, folder, version, icon;
+@synthesize name, identifier, type, bundle, rawPath, folder, version, icon;
 
-  - (id)initWithIndentifier:(NSString *)ident withApplications:(ALApplicationList *)apps {
-    self.identifier = ident;
+- (id)initWithIndentifier:(NSString *)ident withApplications:(ALApplicationList *)apps {
+  self.identifier = ident;
 
-    self.name = [apps valueForKey:@"displayName" forDisplayIdentifier:self.identifier];
-    self.rawPath = [apps valueForKey:@"path" forDisplayIdentifier:self.identifier];
+  self.name = [apps valueForKey:@"displayName" forDisplayIdentifier:self.identifier];
+  self.rawPath = [apps valueForKey:@"path" forDisplayIdentifier:self.identifier];
 
 
-    if ([rawPath hasPrefix:@"/Applications"]) {
-      self.type = @"System";
-      self.folder = @"/Applications/";
-      self.bundle = [self.rawPath stringByReplacingOccurrencesOfString:@"/Applications/" withString:@""];
-    } else if ([self.rawPath hasPrefix:@"/private/"]) {
-      self.type = @"iTunes";
+  if ([rawPath hasPrefix:@"/Applications"]) {
+    self.type = @"System";
+    self.folder = @"/Applications/";
+    self.bundle = [self.rawPath stringByReplacingOccurrencesOfString:@"/Applications/" withString:@""];
+  } else if ([self.rawPath hasPrefix:@"/private/"]) {
+    self.type = @"iTunes";
 
-      NSArray *split = [rawPath componentsSeparatedByString:@"/"];
-      self.folder = [split objectAtIndex:[split count] - 2];
-      self.bundle = [split lastObject];
-    }
-
-    self.bundleVersion = [apps valueForKey:@"bundleVersion" forDisplayIdentifier:self.identifier];
-
-    [self loadExtraInfo];
-
-    return self;
+    NSArray *split = [rawPath componentsSeparatedByString:@"/"];
+    self.folder = [split objectAtIndex:[split count] - 2];
+    self.bundle = [split lastObject];
   }
 
-  - (void)loadExtraInfo {
-    NSString *metaPath = [NSString stringWithFormat:@"/private/var/mobile/Containers/Bundle/Application/%@/%@", self.folder, @"iTunesMetadata.plist"];
-    NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithContentsOfFile:metaPath];
+  self.bundleVersion = [apps valueForKey:@"bundleVersion" forDisplayIdentifier:self.identifier];
 
-    self.artist = [metadata objectForKey:@"artistName"];
-    self.pk = [metadata objectForKey:@"itemId"];
-    self.purchaserAccount = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"accountInfo.AppleID"];
-    self.purchaseDate = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"purchaseDate"];
-    self.releaseDate = [metadata objectForKey:@"releaseDate"];
-    self.version = [metadata objectForKey:@"bundleShortVersionString"];
-  }
+  [self loadExtraInfo];
 
-  - (NSString *) description {
-    return [NSString stringWithFormat:@"<AppInfo name:%@ identifier:%@>", self.name, self.identifier]; 
-  }
+  return self;
+}
 
-  - (BOOL)isiTunes {
-    return [self.type isEqualToString:@"iTunes"];
-  }
+- (void)loadExtraInfo {
+  NSString *metaPath = [NSString stringWithFormat:@"/private/var/mobile/Containers/Bundle/Application/%@/%@", self.folder, @"iTunesMetadata.plist"];
+  NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithContentsOfFile:metaPath];
 
-  - (BOOL)isSystem {
-    return [self.type isEqualToString:@"System"];
-  }
+  self.artist = [metadata objectForKey:@"artistName"];
+  self.pk = [metadata objectForKey:@"itemId"];
+  self.purchaserAccount = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"accountInfo.AppleID"];
+  self.purchaseDate = [[metadata objectForKey:@"com.apple.iTunesStore.downloadInfo"] valueForKeyPath:@"purchaseDate"];
+  self.releaseDate = [metadata objectForKey:@"releaseDate"];
+  self.version = [metadata objectForKey:@"bundleShortVersionString"];
+}
+
+- (NSString *)description {
+  return [NSString stringWithFormat:@"<AppInfo name:%@ identifier:%@>", self.name, self.identifier]; 
+}
+
+- (BOOL)isiTunes {
+  return [self.type isEqualToString:@"iTunes"];
+}
+
+- (BOOL)isSystem {
+  return [self.type isEqualToString:@"System"];
+}
 @end

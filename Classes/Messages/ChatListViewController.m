@@ -6,8 +6,7 @@
 #import "../Settings.h"
 
 @implementation ChatListViewController
-@synthesize chatTable;
-@synthesize chatList;
+@synthesize chatTable, chatList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -129,7 +128,7 @@
   [self.navigationController pushViewController:msgList animated:YES];
 }
 
-- (NSMutableArray *) findChats {
+- (NSMutableArray *)findChats {
   NSString *path = @"/var/mobile/Library/SMS/sms.db";
   sqlite3_stmt *statement;
 

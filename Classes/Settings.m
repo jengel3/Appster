@@ -12,12 +12,12 @@
 @implementation AppsterSettings
 @synthesize preferences;
 
--(id)init {
+- (id)init {
   self.preferences = [self loadData];
   return self;
 }
 
--(NSDictionary *)loadData {
+- (NSDictionary *)loadData {
   NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:valuesPath];
   if (!settings) {
     settings = [[NSDictionary alloc] init];
@@ -25,21 +25,21 @@
   return [settings mutableCopy];
 }
 
--(BOOL)reload {
+- (BOOL)reload {
   self.preferences = [self loadData];
   return YES;
 }
 
--(void)setValue:(id)val forKey:(id)key {
+- (void)setValue:(id)val forKey:(id)key {
   [self.preferences setValue:val forKey:key];
   [self.preferences writeToFile:valuesPath atomically:NO];
 }
 
--(id)valueForKey:(NSString *)key {
+- (id)valueForKey:(NSString *)key {
   return ([self.preferences objectForKey:key] ? [self.preferences objectForKey:key] : nil);
 }
 
--(id)valueForKey:(NSString *)key orDefault:(id)def {
+- (id)valueForKey:(NSString *)key orDefault:(id)def {
   return ([self.preferences objectForKey:key] ? [self.preferences objectForKey:key] : def);
 }
 @end

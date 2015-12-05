@@ -15,7 +15,7 @@
   @property (nonatomic, retain) NSDictionary *rawData;
   @property (nonatomic) BOOL installed;
 
-  -(id)initWithIdentifier:(NSString *)ident andInfo:(NSDictionary *)tweakMap;
-  +(id)tweakForProperty:(NSString *)prop withValue:(NSString *)val andData:(NSMutableArray *)data;
-  -(UIImage *)getIcon:(float)bestFit;
+- (id)initWithIdentifier:(NSString *)ident andInfo:(NSDictionary *)tweakMap;
++ (id)tweakForProperty:(NSString *)prop withValue:(NSString *)val andData:(NSMutableArray *)data;
+- (UIImage *)getIcon:(float)bestFit;
 @end

@@ -46,7 +46,7 @@
   [self.view addSubview:self.infoTable];
 }
 
--(NSString *)getBody:(int)mode {
+- (NSString *)getBody:(int)mode {
   NSMutableString *body = [[NSMutableString alloc] init];
 
   NSArray *keys = [self.info.rawData allKeys];
@@ -64,11 +64,11 @@
   return body;
 }
 
--(NSString *)getSubject {
+- (NSString *)getSubject {
   return @"Cydia Tweak Export %@";
 }
 
-- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (section == 0) {
     return 4;
   } else if (section == 1) {
@@ -79,7 +79,7 @@
   return 0;
 }
 
-- (NSInteger) numberOfSectionsInTableView: (UITableView *) tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 3;
 }
 
@@ -94,7 +94,7 @@
   return nil;
 }
 
-- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *InfoCellID = @"InfoCell";
   static NSString *SubCellID = @"SubCell";
 
@@ -273,5 +273,4 @@
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 @end

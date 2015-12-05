@@ -2,7 +2,7 @@
 #import <Foundation/Foundation.h>
 
 @interface ASUpdatesViewController
--(void)_setUpdatesPageWithUpdates:(id)arg1 fromCache:(char)arg2 ;
+- (void)_setUpdatesPageWithUpdates:(id)arg1 fromCache:(char)arg2 ;
 @end
 
 @interface SSSoftwareUpdate : NSObject
@@ -17,5 +17,4 @@
 - (long long)storeItemIdentifier;
 - (id)updateDictionary;
 - (int)updateState;
-
 @end

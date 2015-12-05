@@ -8,5 +8,5 @@
   @property (nonatomic, strong) NotesListViewController *prototypeCell;
   @property (nonatomic, strong) NSArray *notes;
 
-  -(NSArray *)findNotes;
+  - (NSArray *)findNotes;
 @end

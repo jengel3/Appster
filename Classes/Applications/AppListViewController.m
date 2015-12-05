@@ -132,7 +132,7 @@
   }
 }
 
--(void)showSortMenu:(UIBarButtonItem *)sender {
+- (void)showSortMenu:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];

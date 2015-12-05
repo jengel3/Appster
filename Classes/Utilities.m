@@ -1,7 +1,7 @@
 #import "Utilities.h"
 
 @implementation Utilities
-  + (NSString*)emailForControl:(NSString*)ctrl {
+  + (NSString *)emailForControl:(NSString *)ctrl {
     NSError *regErr = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\<([^<>]+)\\>" 
       options:NSRegularExpressionCaseInsensitive 
@@ -15,12 +15,12 @@
     return nil;
   }
 
-  + (NSString*)usernameForControl:(NSString*)ctrl andEmail:(NSString*)email {
+  + (NSString *)usernameForControl:(NSString *)ctrl andEmail:(NSString *)email {
     ctrl = [ctrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"<%@>", email] withString:@""];
     return [ctrl stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
   }
 
-  + (UIImage*)imageWithImage: (UIImage*) sourceImage scaledToWidth: (float) i_width {
+  + (UIImage *)imageWithImage: (UIImage *) sourceImage scaledToWidth: (float) i_width {
     float oldWidth = sourceImage.size.width;
     float scaleFactor = i_width / oldWidth;
 
@@ -34,7 +34,7 @@
     return newImage;
   }
 
-  + (int)sortForKey:(NSString*)key {
+  + (int)sortForKey:(NSString *)key {
     if ([key isEqualToString:@"alpha_asc"]) {
       return 1;
     } else if ([key isEqualToString:@"alpha_desc"]) {

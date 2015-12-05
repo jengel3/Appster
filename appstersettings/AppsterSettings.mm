@@ -8,17 +8,17 @@
 #define valuesPath @"/User/Library/Preferences/com.jake0oo0.appster.plist"
 
 @implementation DeveloperCell
--(NSString*)personDescription { return @"Lead Developer"; }
--(NSString*)name { return @"Jake0oo0"; }
--(NSString*)twitterHandle { return @"itsjake88"; }
--(NSString*)imageName { return @"Jake@2x.png"; }
+-(NSString *)personDescription { return @"Lead Developer"; }
+-(NSString *)name { return @"Jake0oo0"; }
+-(NSString *)twitterHandle { return @"itsjake88"; }
+-(NSString *)imageName { return @"Jake@2x.png"; }
 @end
 
 @implementation DesignerCell
--(NSString*)personDescription { return @"Lead Designer"; }
--(NSString*)name { return @"AOkhtenberg"; }
--(NSString*)twitterHandle { return @"AOkhtenberg"; }
--(NSString*)imageName { return @"AOkhtenberg@2x.png"; }
+-(NSString *)personDescription { return @"Lead Designer"; }
+-(NSString *)name { return @"AOkhtenberg"; }
+-(NSString *)twitterHandle { return @"AOkhtenberg"; }
+-(NSString *)imageName { return @"AOkhtenberg@2x.png"; }
 @end
 
 @implementation DevelopersListCell
@@ -34,7 +34,7 @@
   [SKSharedHelper openTwitter:@"AOkhtenberg"];
 }
 
--(NSArray*)customSpecifiers {
+-(NSArray *)customSpecifiers {
   return @[
    @{
       @"cell": @"PSLinkCell",
@@ -53,29 +53,29 @@
 @end
 
 @implementation AppsterSettingsListController
--(UIColor*)tintColor { 
+-(UIColor *)tintColor { 
   return [UIColor colorWithRed:0.19 green:0.56 blue:0.84 alpha:1.0]; // instagram color
 }
 -(BOOL)tintNavigationTitleText { 
   return YES; 
 }
 
--(NSString*)shareMessage {
+-(NSString *)shareMessage {
     return @"I'm using #Appster by @itsjake88 to export content from my iDevice. Check it out!";
 }
 
--(NSString*)headerText { 
+-(NSString *)headerText { 
   return @"Appster"; 
 }
 
--(NSString*)headerSubText {
+-(NSString *)headerSubText {
   return @"View and Export Device Data";
 }
 
--(NSString*)customTitle { 
+-(NSString *)customTitle { 
   return @"Appster"; 
 }
--(NSArray*)customSpecifiers {
+-(NSArray *)customSpecifiers {
   return @[
     @{
       @"cell": @"PSGroupCell",
@@ -179,7 +179,7 @@
 }
 
 // http://iphonedevwiki.net/index.php/PreferenceBundles
--(id) readPreferenceValue:(PSSpecifier*)specifier {
+-(id) readPreferenceValue:(PSSpecifier *)specifier {
   NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:valuesPath];
   if (!settings[specifier.properties[@"key"]]) {
     return specifier.properties[@"default"];
@@ -187,7 +187,7 @@
   return settings[specifier.properties[@"key"]];
 }
  
--(void) setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
+-(void) setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
   NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
   [defaults addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:valuesPath]];
   [defaults setObject:value forKey:specifier.properties[@"key"]];

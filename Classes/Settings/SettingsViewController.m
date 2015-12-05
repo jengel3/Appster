@@ -55,7 +55,7 @@
   [self.settingsTable reloadData];
 }
 
-- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   if (section == 0) {
     return 1;
   } else if (section == 1) {
@@ -123,7 +123,7 @@
 
   if (section == 0) {
     if (row == 0) {
-      UIViewController *settings = (UIViewController*)[[AppsterSettingsListController alloc] init];
+      UIViewController *settings = (UIViewController *)[[AppsterSettingsListController alloc] init];
 
       [self.navigationController pushViewController:settings animated:YES];
     }
@@ -147,7 +147,7 @@
   [self presentViewController:composeController animated:YES completion:nil];
 }
 
--(void)openTwitter:(NSString*)username {
+-(void)openTwitter:(NSString *)username {
   if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot:"]]){
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[@"tweetbot:///user_profile/" stringByAppendingString:username]]];
   } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitterrific:"]]) {
@@ -191,7 +191,7 @@
   }
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 

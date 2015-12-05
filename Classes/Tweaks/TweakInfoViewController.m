@@ -46,7 +46,7 @@
   [self.view addSubview:self.infoTable];
 }
 
--(NSString*)getBody:(int)mode {
+-(NSString *)getBody:(int)mode {
   NSMutableString *body = [[NSMutableString alloc] init];
 
   NSArray *keys = [self.info.rawData allKeys];
@@ -64,7 +64,7 @@
   return body;
 }
 
--(NSString*)getSubject {
+-(NSString *)getSubject {
   return @"Cydia Tweak Export %@";
 }
 
@@ -270,7 +270,7 @@
   }
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 

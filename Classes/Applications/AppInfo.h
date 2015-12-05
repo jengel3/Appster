@@ -17,7 +17,7 @@
   @property (nonatomic, retain) UIImage *icon;
   @property (nonatomic, retain) ALApplicationList *appList;
 
-  - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps;
+  - (id)initWithIndentifier:(NSString *)ident withApplications:(ALApplicationList *)apps;
   - (void)loadExtraInfo;
   - (BOOL)isiTunes;
   - (BOOL)isSystem;

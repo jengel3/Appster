@@ -64,7 +64,7 @@ float bestFit;
 	[self.tweakTable reloadData];
 }
 
-- (void)showSortMenu:(UIBarButtonItem*)sender {
+- (void)showSortMenu:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Sort Tweaks"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -125,7 +125,7 @@ float bestFit;
   [self.tweakTable reloadData]; 
 }
 
-- (void)showActionSheet:(UIBarButtonItem*)sender {
+- (void)showActionSheet:(UIBarButtonItem *)sender {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
 	  message:nil
 	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -182,7 +182,7 @@ float bestFit;
   [self presentViewController:alert animated:YES completion:nil];
 }
 
--(NSString*)getBody:(int)mode {
+-(NSString *)getBody:(int)mode {
   NSMutableString *body = [[NSMutableString alloc] init];
 
   [body appendString:@"<b>Sources:</b><br>"];
@@ -217,11 +217,11 @@ float bestFit;
   return body;
 }
 
--(NSString*)getSubject {
+-(NSString *)getSubject {
   return @"Cydia Tweaks Export %@";
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   if (self.searchController.active) {
     return 1;
   } else {
@@ -263,7 +263,7 @@ float bestFit;
   TweakInfo *tweak;
 
   if (self.searchController.active) {
-    tweak = (TweakInfo*)[self.searchResults objectAtIndex:indexPath.row];
+    tweak = (TweakInfo *)[self.searchResults objectAtIndex:indexPath.row];
   } else {
     if (indexPath.section == 0) {
       NSString *source = [self.sources objectAtIndex:indexPath.row];
@@ -281,7 +281,7 @@ float bestFit;
       cell.imageView.image = img;
       return cell;
     } else if (indexPath.section == 1) {
-      tweak = (TweakInfo*)[self.tweakData objectAtIndex:indexPath.row];
+      tweak = (TweakInfo *)[self.tweakData objectAtIndex:indexPath.row];
     }
   }
 
@@ -337,7 +337,7 @@ float bestFit;
 	[self.navigationController pushViewController:tweakView animated:YES];
 }
 
-- (void)searchForText:(NSString*)searchText scope:(int)scope {
+- (void)searchForText:(NSString *)searchText scope:(int)scope {
   NSString *key;
   if (scope == 0) {
     key = @"name";
@@ -360,7 +360,7 @@ float bestFit;
   [self updateSearchResultsForSearchController:self.searchController];
 }
 
--(NSArray*)loadTweaks {
+-(NSArray *)loadTweaks {
 	if (!self.tweakData) {
 		NSData* data = [NSData dataWithContentsOfFile:@"/var/lib/dpkg/status"];
 		NSString* string = [[NSString alloc] 

@@ -17,7 +17,7 @@
   @synthesize rawData;
   @synthesize installed;
 
-  -(id)initWithIdentifier:(NSString*)ident andInfo:(NSDictionary*)tweakMap {
+  -(id)initWithIdentifier:(NSString *)ident andInfo:(NSDictionary *)tweakMap {
     self.package = ident;
     self.name = [tweakMap objectForKey:@"Name"];
     self.rawData = tweakMap;
@@ -53,16 +53,16 @@
     return self;
   }
 
-  +(id)tweakForProperty:(NSString*)prop withValue:(NSString*)val andData:(NSMutableArray*)data {
+  +(id)tweakForProperty:(NSString *)prop withValue:(NSString *)val andData:(NSMutableArray *)data {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ == '%@'", prop, val]];
     NSArray *filtered = [data filteredArrayUsingPredicate:predicate];
     if (filtered) {
-      return (TweakInfo*)[filtered objectAtIndex:0];
+      return (TweakInfo *)[filtered objectAtIndex:0];
     }
     return nil;
   }
 
-  -(UIImage*)getIcon:(float)bestFit {
+  -(UIImage *)getIcon:(float)bestFit {
     NSString *iconPath = [self.rawData objectForKey:@"Icon"];
     NSString *tempSec = self.section;
     BOOL existed = false;

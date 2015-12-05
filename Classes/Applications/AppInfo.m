@@ -3,7 +3,7 @@
 @implementation AppInfo
   @synthesize name, identifier, type, bundle, rawPath, folder, version, icon;
 
-  - (id)initWithIndentifier:(NSString*)ident withApplications:(ALApplicationList*)apps {
+  - (id)initWithIndentifier:(NSString *)ident withApplications:(ALApplicationList *)apps {
     self.identifier = ident;
 
     self.name = [apps valueForKey:@"displayName" forDisplayIdentifier:self.identifier];
@@ -41,7 +41,7 @@
     self.version = [metadata objectForKey:@"bundleShortVersionString"];
   }
 
-  - (NSString*) description {
+  - (NSString *) description {
     return [NSString stringWithFormat:@"<AppInfo name:%@ identifier:%@>", self.name, self.identifier]; 
   }
 

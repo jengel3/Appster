@@ -356,7 +356,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	self.showStarted = nil;
 }
 
-- (void)animationFinished:(NSString *)animationID finished:(BOOL)finished context:(void*)context {
+- (void)animationFinished:(NSString *)animationID finished:(BOOL)finished context:(void *)context {
 	[self done];
 }
 

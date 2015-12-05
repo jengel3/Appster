@@ -50,7 +50,7 @@
   [self.infoTable reloadData];
 }
 
--(void)showActionSheet:(UIBarButtonItem*)sender {
+-(void)showActionSheet:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -286,7 +286,7 @@
   [hud hide:YES afterDelay:0.5];
 }
 
-- (id)valueForKey:(NSString*)key {
+- (id)valueForKey:(NSString *)key {
   return [self.appList valueForKey:key forDisplayIdentifier:self.appInfo.identifier];
 }
 @end

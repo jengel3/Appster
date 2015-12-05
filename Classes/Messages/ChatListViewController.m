@@ -82,7 +82,7 @@
   }
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -91,7 +91,7 @@
   [self.chatTable reloadData];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
 
@@ -99,7 +99,7 @@
   return [self.chatList count];
 }
 
-- (UITableViewCell *)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   NSString *CellIdentifier = @"Cell";
 
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -121,7 +121,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-  SMSChat *chat = (SMSChat*)[self.chatList objectAtIndex:indexPath.row];
+  SMSChat *chat = (SMSChat *)[self.chatList objectAtIndex:indexPath.row];
 
   MessagesListViewController *msgList = [MessagesListViewController alloc];
   msgList.chatId = chat.chatId;
@@ -129,7 +129,7 @@
   [self.navigationController pushViewController:msgList animated:YES];
 }
 
-- (NSMutableArray*) findChats {
+- (NSMutableArray *) findChats {
   NSString *path = @"/var/mobile/Library/SMS/sms.db";
   sqlite3_stmt *statement;
 
@@ -146,10 +146,10 @@
     while (sqlite3_step(statement) == SQLITE_ROW) {
       SMSChat *chat = [SMSChat alloc];
 
-      chat.guid = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 0)];
+      chat.guid = [NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 0)];
       chat.guid = [chat.guid componentsSeparatedByString:@";"][2];
 
-      chat.chatId = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+      chat.chatId = [NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 1)];
       [resultArray addObject:chat];
     }
     sqlite3_reset(statement);

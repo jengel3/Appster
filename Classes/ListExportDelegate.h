@@ -1,6 +1,6 @@
 @protocol ListExportDelegate <NSObject>
 @optional
--(NSString*)getSubject;
+-(NSString *)getSubject;
 @required
--(NSMutableString*)getBody:(int)mode;
+-(NSMutableString *)getBody:(int)mode;
 @end

@@ -41,7 +41,7 @@ static NSString *CellIdentifier = @"Cell";
   [self.messagesTable reloadData];  
 }
 
-- (NSString*)getBody:(int)mode {
+- (NSString *)getBody:(int)mode {
   NSMutableString *body = [[NSMutableString alloc] init];
 
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -55,15 +55,15 @@ static NSString *CellIdentifier = @"Cell";
   return body;
 }
 
-- (NSString*)getSubject {
+- (NSString *)getSubject {
   return @"Appster Messages Export %@";
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
 
@@ -73,7 +73,7 @@ static NSString *CellIdentifier = @"Cell";
 
 - (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
   UIMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-  SMSMessage *msg = (SMSMessage*)[self.messages objectAtIndex:indexPath.row];
+  SMSMessage *msg = (SMSMessage *)[self.messages objectAtIndex:indexPath.row];
 
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 
@@ -105,7 +105,7 @@ static NSString *CellIdentifier = @"Cell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-  UIMessageTableViewCell *cell = (UIMessageTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+  UIMessageTableViewCell *cell = (UIMessageTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
   if (!cell.msgLabel || !cell.msgLabel.text) return;
   
   UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -118,7 +118,7 @@ static NSString *CellIdentifier = @"Cell";
   [hud hide:YES afterDelay:0.5];
 }
 
-- (NSMutableArray*)findMessages {
+- (NSMutableArray *)findMessages {
     NSString *path = @"/var/mobile/Library/SMS/sms.db";
     sqlite3_stmt *statement;
 
@@ -136,9 +136,9 @@ static NSString *CellIdentifier = @"Cell";
         while (sqlite3_step(statement) == SQLITE_ROW) {
           SMSMessage *msg = [SMSMessage alloc];
           msg.text = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(statement, 0)];
-          NSString *date = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 1)];
+          NSString *date = [NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 1)];
           msg.date = [NSDate dateWithTimeIntervalSinceReferenceDate:[date doubleValue]];
-          msg.isFromMe = [[NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 2)] boolValue];
+          msg.isFromMe = [[NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 2)] boolValue];
           [resultArray addObject:msg];
         }
         sqlite3_reset(statement);

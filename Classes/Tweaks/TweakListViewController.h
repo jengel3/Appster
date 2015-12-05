@@ -9,6 +9,6 @@
   @property (nonatomic, retain) UITableView *tweakTable;
   @property (strong, nonatomic) UISearchController *searchController;
 
-  -(NSDictionary*)loadTweaks;
+  -(NSDictionary *)loadTweaks;
   -(void)loadSources;
 @end

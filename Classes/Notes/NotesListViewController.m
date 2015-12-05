@@ -43,7 +43,7 @@ static NSString *CellIdentifier = @"Cell";
   [self loadData];
 }
 
-- (void)exportOptions:(UIBarButtonItem*)sender {
+- (void)exportOptions:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Notes Export Options"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -127,7 +127,7 @@ static NSString *CellIdentifier = @"Cell";
   }
 }
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -136,7 +136,7 @@ static NSString *CellIdentifier = @"Cell";
   [self.notesTable reloadData];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   return 1;
 }
 
@@ -173,7 +173,7 @@ static NSString *CellIdentifier = @"Cell";
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (NSArray*)findNotes {
+- (NSArray *)findNotes {
   NSString *path = @"/var/mobile/Library/Notes/notes.sqlite";
   sqlite3_stmt *statement;
 
@@ -201,8 +201,8 @@ static NSString *CellIdentifier = @"Cell";
 
         note.body = [[NSAttributedString alloc] initWithData:[rawBody dataUsingEncoding:NSUTF16StringEncoding]  options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType} documentAttributes:nil error:nil];
 
-        NSString *creationDate = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 4)];
-        NSString *updateDate = [NSString stringWithFormat:@"%s",(char*)sqlite3_column_text(statement, 5)];
+        NSString *creationDate = [NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 4)];
+        NSString *updateDate = [NSString stringWithFormat:@"%s",(char *)sqlite3_column_text(statement, 5)];
 
         note.createdAt = [NSDate dateWithTimeIntervalSinceReferenceDate:[creationDate doubleValue]];
         note.updatedAt = [NSDate dateWithTimeIntervalSinceReferenceDate:[updateDate doubleValue]];

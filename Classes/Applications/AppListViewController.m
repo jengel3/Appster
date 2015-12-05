@@ -132,7 +132,7 @@
   }
 }
 
--(void)showSortMenu:(UIBarButtonItem*)sender {
+-(void)showSortMenu:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Tweak Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -175,7 +175,7 @@
 }
 
 
-- (void)showActionSheet:(UIBarButtonItem*)sender {
+- (void)showActionSheet:(UIBarButtonItem *)sender {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"App Actions"
     message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
@@ -232,7 +232,7 @@
   [self.appTable reloadData]; 
 }
 
--(NSString*)getBody:(int)mode {
+-(NSString *)getBody:(int)mode {
 	AppsterSettings *settings = [[AppsterSettings alloc] init];
 
   NSMutableString *body = [[NSMutableString alloc] init];
@@ -267,7 +267,7 @@
   return body;
 }
 
--(NSString*)getSubject {
+-(NSString *)getSubject {
   return @"Applications Export %@";
 }
 
@@ -300,7 +300,7 @@
   return nil;
 }
 
-- (UITableViewCell *)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *CellIdentifier = @"Cell";
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -311,11 +311,11 @@
 
   AppInfo *app;
   if (self.searchController.active) {
-    app = (AppInfo*)[self.searchResults objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.searchResults objectAtIndex:indexPath.row];
   } else if (indexPath.section == 0) {
-    app = (AppInfo*)[self.mobileApps objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.mobileApps objectAtIndex:indexPath.row];
   } else if (indexPath.section == 1) {
-    app = (AppInfo*)[self.systemApps objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.systemApps objectAtIndex:indexPath.row];
   }
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -330,11 +330,11 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
   AppInfo *app;
   if (self.searchController.active) {
-    app = (AppInfo*)[self.searchResults objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.searchResults objectAtIndex:indexPath.row];
   } else if (indexPath.section == 0) {
-    app = (AppInfo*)[self.mobileApps objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.mobileApps objectAtIndex:indexPath.row];
   } else if (indexPath.section == 1) {
-    app = (AppInfo*)[self.systemApps objectAtIndex:indexPath.row];
+    app = (AppInfo *)[self.systemApps objectAtIndex:indexPath.row];
   }
 	
 	AppInfoViewController *appView = [[AppInfoViewController alloc] init];
@@ -344,7 +344,7 @@
 	[self.navigationController pushViewController:appView animated:YES];
 }
 
-- (void)searchForText:(NSString*)searchText scope:(int)scope {
+- (void)searchForText:(NSString *)searchText scope:(int)scope {
   NSString *key;
   if (scope == 0) {
     key = @"name";

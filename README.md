@@ -21,7 +21,7 @@ Appster is a work-in-progress replacement for the now-defunct Cydia application,
 
 ## License
 
-All rights reserved to Jake0oo0. Appster may not be redistributed by any user or apt repository without permission from the active authors and maintainers. 
+Apache License
 
 # Depiction
 

@@ -7,6 +7,16 @@
 
 #define valuesPath @"/User/Library/Preferences/com.jake0oo0.appster.plist"
 
+@interface DeveloperCell : SKPersonCell
+@end
+
+@interface DesignerCell : SKPersonCell
+@end
+
+@interface DevelopersListCell : SKTintedListController <SKListControllerProtocol>
+@end
+
+
 @implementation DeveloperCell
 -(NSString *)personDescription { return @"Lead Developer"; }
 -(NSString *)name { return @"Jake0oo0"; }
